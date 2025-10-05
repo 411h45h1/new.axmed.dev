@@ -437,6 +437,23 @@ export function initWindows() {
 
   loadState(wins);
 
+  // Ensure at least one window is visible on mobile (preferably "about")
+  if (isMobile()) {
+    const visibleWindows = wins.filter((w) => !w.classList.contains("hidden"));
+    if (visibleWindows.length === 0) {
+      // No windows visible, show "about" by default
+      const aboutWindow = wins.find((w) => w.dataset.app === "about");
+      if (aboutWindow) {
+        aboutWindow.classList.remove("hidden");
+        focus(aboutWindow);
+      } else if (wins.length > 0) {
+        // Fallback: show the first window if "about" doesn't exist
+        wins[0].classList.remove("hidden");
+        focus(wins[0]);
+      }
+    }
+  }
+
   function playMinimize(win, done) {
     const app = win.dataset.app;
     const dockItem = document.querySelector(`.dock-item[data-app="${app}"]`);

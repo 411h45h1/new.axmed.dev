@@ -14,7 +14,7 @@ export function loadState(wins) {
       const { left, top, width, height, hidden, maximized } = data[appId];
 
       if (isMobile()) {
-        if (appId === "notes") {
+        if (appId === "about") {
           w.classList.remove("hidden");
         } else {
           w.classList.add("hidden");

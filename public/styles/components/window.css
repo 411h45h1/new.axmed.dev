@@ -209,28 +209,115 @@
 
 .window-resizer {
   position: absolute;
-  right: 6px;
-  bottom: 4px;
-  width: 16px;
-  height: 16px;
+  right: 0;
+  bottom: 0;
+  width: 20px;
+  height: 20px;
   cursor: nwse-resize;
-  opacity: 0.55;
+  z-index: 10;
 }
 
 .window-resizer::before {
   content: "";
   position: absolute;
-  inset: 0;
+  right: 4px;
+  bottom: 4px;
+  width: 12px;
+  height: 12px;
   background: linear-gradient(
     135deg,
+    transparent 0%,
     transparent 45%,
-    rgba(0, 0, 0, 0.5) 46%,
-    rgba(0, 0, 0, 0.5) 52%,
-    transparent 53%
+    rgba(255, 255, 255, 0.4) 45%,
+    rgba(255, 255, 255, 0.4) 48%,
+    transparent 48%,
+    transparent 52%,
+    rgba(255, 255, 255, 0.4) 52%,
+    rgba(255, 255, 255, 0.4) 55%,
+    transparent 55%,
+    transparent 59%,
+    rgba(255, 255, 255, 0.4) 59%,
+    rgba(255, 255, 255, 0.4) 62%,
+    transparent 62%
   );
-  opacity: 0.25;
+  opacity: 0.6;
+  transition: opacity var(--transition-fast);
 }
 
-.window.maximized .window-resizer {
+.window-resizer:hover::before {
+  opacity: 1;
+}
+
+.window-resizer-edge {
+  position: absolute;
+  z-index: 9;
+}
+
+.window-resizer-edge.top {
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  cursor: ns-resize;
+}
+
+.window-resizer-edge.bottom {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  cursor: ns-resize;
+}
+
+.window-resizer-edge.left {
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 6px;
+  cursor: ew-resize;
+}
+
+.window-resizer-edge.right {
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 6px;
+  cursor: ew-resize;
+}
+
+.window-resizer-corner {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  z-index: 10;
+}
+
+.window-resizer-corner.top-left {
+  top: 0;
+  left: 0;
+  cursor: nwse-resize;
+}
+
+.window-resizer-corner.top-right {
+  top: 0;
+  right: 0;
+  cursor: nesw-resize;
+}
+
+.window-resizer-corner.bottom-left {
+  bottom: 0;
+  left: 0;
+  cursor: nesw-resize;
+}
+
+.window-resizer-corner.bottom-right {
+  bottom: 0;
+  right: 0;
+  cursor: nwse-resize;
+}
+
+.window.maximized .window-resizer,
+.window.maximized .window-resizer-edge,
+.window.maximized .window-resizer-corner {
   display: none;
 }

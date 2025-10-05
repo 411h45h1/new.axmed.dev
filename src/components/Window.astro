@@ -1,9 +1,15 @@
 ---
-const { appId, title, initialStyle = "", ariaLabel } = Astro.props;
+const {
+  appId,
+  title,
+  initialStyle = "",
+  ariaLabel,
+  hidden = false,
+} = Astro.props;
 ---
 
 <section
-  class="window"
+  class={`window ${hidden ? "hidden" : ""}`}
   id={`win-${appId}`}
   data-app={appId}
   role="dialog"
@@ -54,5 +60,36 @@ const { appId, title, initialStyle = "", ariaLabel } = Astro.props;
   <div class="window-content">
     <slot />
   </div>
-  <div class="window-resizer" aria-hidden="true"></div>
+  <div class="window-resizer" aria-hidden="true" data-resize="bottom-right">
+  </div>
+  <div
+    class="window-resizer-corner top-left"
+    aria-hidden="true"
+    data-resize="top-left"
+  >
+  </div>
+  <div
+    class="window-resizer-corner top-right"
+    aria-hidden="true"
+    data-resize="top-right"
+  >
+  </div>
+  <div
+    class="window-resizer-corner bottom-left"
+    aria-hidden="true"
+    data-resize="bottom-left"
+  >
+  </div>
+  <div class="window-resizer-edge top" aria-hidden="true" data-resize="top">
+  </div>
+  <div
+    class="window-resizer-edge bottom"
+    aria-hidden="true"
+    data-resize="bottom"
+  >
+  </div>
+  <div class="window-resizer-edge left" aria-hidden="true" data-resize="left">
+  </div>
+  <div class="window-resizer-edge right" aria-hidden="true" data-resize="right">
+  </div>
 </section>

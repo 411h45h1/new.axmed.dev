@@ -63,17 +63,29 @@ export function initDock() {
           menubar.setAttribute("data-screen-title", title);
         }
       } else {
-        if (w.classList.contains("hidden")) {
+        const isHidden = w.classList.contains("hidden");
+        const isMinimized = w.classList.contains("minimized");
+        const isFocused = w.classList.contains("focused");
+        const isMaximized = w.classList.contains("maximized");
+
+        if (isHidden) {
           w.classList.remove("hidden", "minimized");
           focus(w);
-          // Ensure window doesn't appear under menubar
           if (window.__ensureWindowsRespectMenubar) {
             setTimeout(() => window.__ensureWindowsRespectMenubar(), 0);
           }
-        } else if (w.classList.contains("minimized")) {
+        } else if (isMinimized) {
           w.classList.remove("minimized");
           w.style.removeProperty("transform");
           focus(w);
+        } else if (isFocused && !isMaximized) {
+          if (window.__toggleMaximize) {
+            window.__toggleMaximize(w);
+          }
+        } else if (isFocused && isMaximized) {
+          if (window.__toggleMaximize) {
+            window.__toggleMaximize(w);
+          }
         } else {
           focus(w);
         }

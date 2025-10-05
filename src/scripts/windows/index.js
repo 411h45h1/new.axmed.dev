@@ -47,7 +47,7 @@ export function initWindows() {
   if (isMobile()) {
     wins.forEach((w) => {
       const appId = w.dataset.app;
-      if (appId === "notes") {
+      if (appId === "about") {
         w.classList.remove("hidden");
         focus(w);
       } else {
@@ -81,8 +81,30 @@ export function initWindows() {
     });
   }
 
-  // Make the function available globally for dock/menubar
+  function toggleMaximize(win) {
+    const goingMax = !win.classList.contains("maximized");
+    if (goingMax) {
+      win.dataset.prevInline = win.getAttribute("style") || "";
+      win.style.removeProperty("left");
+      win.style.removeProperty("top");
+      win.style.removeProperty("width");
+      win.style.removeProperty("height");
+      win.classList.add("maximized");
+      focus(win);
+      saveState(wins);
+    } else {
+      win.classList.remove("maximized");
+      if (!isMobile()) {
+        const prev = win.dataset.prevInline || "";
+        win.setAttribute("style", prev);
+      }
+      focus(win);
+      saveState(wins);
+    }
+  }
+
   window.__ensureWindowsRespectMenubar = ensureWindowsRespectMenubar;
+  window.__toggleMaximize = toggleMaximize;
 
   const smartLayout = smartDistributeWindows(wins);
   if (smartLayout) {
@@ -229,43 +251,144 @@ export function initWindows() {
   });
 
   wins.forEach((win) => {
-    const resizer = win.querySelector(".window-resizer");
-
     if (isMobile()) {
       return;
     }
 
-    let resizing = false,
-      startX = 0,
+    const resizeElements = win.querySelectorAll(
+      ".window-resizer, .window-resizer-corner, .window-resizer-edge"
+    );
+
+    let resizing = false;
+    let resizeMode = null;
+    let startX = 0,
       startY = 0,
       startW = 0,
-      startH = 0;
-    resizer.addEventListener("mousedown", (e) => {
-      if (win.classList.contains("maximized")) return;
-      resizing = true;
-      startX = e.clientX;
-      startY = e.clientY;
-      const r = win.getBoundingClientRect();
-      startW = r.width;
-      startH = r.height;
-      focus(win);
-      win.classList.add("interacting");
-      e.preventDefault();
+      startH = 0,
+      startLeft = 0,
+      startTop = 0;
+
+    resizeElements.forEach((resizer) => {
+      resizer.addEventListener("mousedown", (e) => {
+        if (win.classList.contains("maximized")) return;
+        resizing = true;
+        resizeMode = resizer.dataset.resize || "bottom-right";
+        startX = e.clientX;
+        startY = e.clientY;
+        const r = win.getBoundingClientRect();
+        startW = r.width;
+        startH = r.height;
+        startLeft = r.left;
+        startTop = r.top;
+        focus(win);
+        win.classList.add("interacting");
+        e.preventDefault();
+        e.stopPropagation();
+      });
     });
+
     window.addEventListener("mousemove", (e) => {
       if (!resizing) return;
-      const dx = e.clientX - startX,
-        dy = e.clientY - startY;
-      let nw = startW + dx,
-        nh = startH + dy;
-      nw = Math.max(240, Math.min(nw, window.innerWidth - win.offsetLeft - 20));
-      nh = Math.max(140, Math.min(nh, window.innerHeight - win.offsetTop - 20));
-      win.style.width = nw + "px";
-      win.style.height = nh + "px";
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+
+      const menubarHeight =
+        parseInt(
+          getComputedStyle(document.documentElement).getPropertyValue(
+            "--menubar-height"
+          )
+        ) || 28;
+      const dockHeight =
+        parseInt(
+          getComputedStyle(document.documentElement).getPropertyValue(
+            "--dock-height"
+          )
+        ) || 84;
+
+      let newWidth = startW;
+      let newHeight = startH;
+      let newLeft = startLeft;
+      let newTop = startTop;
+
+      // Handle different resize modes
+      switch (resizeMode) {
+        case "bottom-right":
+          newWidth = startW + dx;
+          newHeight = startH + dy;
+          break;
+        case "bottom-left":
+          newWidth = startW - dx;
+          newHeight = startH + dy;
+          newLeft = startLeft + dx;
+          break;
+        case "top-right":
+          newWidth = startW + dx;
+          newHeight = startH - dy;
+          newTop = startTop + dy;
+          break;
+        case "top-left":
+          newWidth = startW - dx;
+          newHeight = startH - dy;
+          newLeft = startLeft + dx;
+          newTop = startTop + dy;
+          break;
+        case "right":
+          newWidth = startW + dx;
+          break;
+        case "left":
+          newWidth = startW - dx;
+          newLeft = startLeft + dx;
+          break;
+        case "bottom":
+          newHeight = startH + dy;
+          break;
+        case "top":
+          newHeight = startH - dy;
+          newTop = startTop + dy;
+          break;
+      }
+
+      // Apply constraints
+      const minWidth = 240;
+      const minHeight = 140;
+
+      if (resizeMode.includes("left")) {
+        const maxWidth = startLeft + startW - 40;
+        newWidth = Math.max(minWidth, Math.min(newWidth, maxWidth));
+        newLeft = startLeft + startW - newWidth;
+      } else if (resizeMode.includes("right") || resizeMode === "right") {
+        const maxWidth = window.innerWidth - startLeft - 20;
+        newWidth = Math.max(minWidth, Math.min(newWidth, maxWidth));
+      }
+
+      if (resizeMode.includes("top")) {
+        const maxHeight = startTop + startH - menubarHeight - 40;
+        newHeight = Math.max(minHeight, Math.min(newHeight, maxHeight));
+        newTop = startTop + startH - newHeight;
+        newTop = Math.max(menubarHeight, newTop);
+      } else if (resizeMode.includes("bottom") || resizeMode === "bottom") {
+        const maxHeight = window.innerHeight - dockHeight - startTop - 20;
+        newHeight = Math.max(minHeight, Math.min(newHeight, maxHeight));
+      }
+
+      // Apply styles
+      win.style.width = newWidth + "px";
+      win.style.height = newHeight + "px";
+
+      if (resizeMode.includes("left") || resizeMode === "left") {
+        win.style.left = newLeft + "px";
+      }
+      if (resizeMode.includes("top") || resizeMode === "top") {
+        win.style.top = newTop + "px";
+      }
     });
+
     window.addEventListener("mouseup", () => {
-      resizing = false;
-      win.classList.remove("interacting");
+      if (resizing) {
+        resizing = false;
+        resizeMode = null;
+        win.classList.remove("interacting");
+      }
     });
   });
 
@@ -308,28 +431,6 @@ export function initWindows() {
   });
 
   loadState(wins);
-
-  function toggleMaximize(win) {
-    const goingMax = !win.classList.contains("maximized");
-    if (goingMax) {
-      win.dataset.prevInline = win.getAttribute("style") || "";
-      win.style.removeProperty("left");
-      win.style.removeProperty("top");
-      win.style.removeProperty("width");
-      win.style.removeProperty("height");
-      win.classList.add("maximized");
-      focus(win);
-      saveState(wins);
-    } else {
-      win.classList.remove("maximized");
-      if (!isMobile()) {
-        const prev = win.dataset.prevInline || "";
-        win.setAttribute("style", prev);
-      }
-      focus(win);
-      saveState(wins);
-    }
-  }
 
   function playMinimize(win, done) {
     const app = win.dataset.app;

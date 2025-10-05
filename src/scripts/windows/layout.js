@@ -139,10 +139,11 @@ export function createPreferredLayout(
     windowMap[w.dataset.app] = w;
   });
 
-  const aboutMe = windowMap["notes"];
-  const projects = windowMap["browser"];
-  const skills = windowMap["terminal"];
-  const contact = windowMap["about"];
+  const aboutMe = windowMap["about"];
+  const experience = windowMap["experience"];
+  const projects = windowMap["projects"];
+  const skills = windowMap["skills"];
+  const contact = windowMap["contact"];
 
   if (tablet) {
     if (windowCount === 1) {
@@ -342,9 +343,9 @@ export function createPreferredLayout(
         const otherWindows = [];
 
         visibleWins.forEach((w) => {
-          if (w.dataset.app === "notes") {
+          if (w.dataset.app === "about") {
             priorityWindows.unshift(w);
-          } else if (w.dataset.app === "browser") {
+          } else if (w.dataset.app === "projects") {
             priorityWindows.push(w);
           } else {
             otherWindows.push(w);
@@ -388,7 +389,72 @@ export function createPreferredLayout(
         };
       }
     } else {
-      if (aboutMe && projects && skills && contact) {
+      // Handle 5 windows: both projects and experience open - stack them in column 2
+      if (aboutMe && projects && experience && skills && contact) {
+        const col1Width = Math.round(availableWidth * 0.28);
+        const col2Width = Math.round(availableWidth * 0.38);
+        const col3Width = availableWidth - col1Width - col2Width - GAP * 2;
+        const fullHeight = availableHeight;
+        const halfHeightCol2 = Math.round((fullHeight - GAP) / 2);
+        const halfHeightCol3 = Math.round((fullHeight - GAP) / 2);
+
+        if (
+          col1Width >= MIN_W &&
+          col2Width >= MIN_W &&
+          col3Width >= MIN_W &&
+          halfHeightCol2 >= MIN_H &&
+          halfHeightCol3 >= MIN_H
+        ) {
+          return {
+            type: "preferred",
+            entries: [
+              {
+                w: aboutMe,
+                left: MARGIN,
+                top: menubarHeight + MARGIN,
+                width: col1Width,
+                height: fullHeight,
+                priority: 1,
+              },
+              {
+                w: projects,
+                left: MARGIN + col1Width + GAP,
+                top: menubarHeight + MARGIN,
+                width: col2Width,
+                height: halfHeightCol2,
+                priority: 1,
+              },
+              {
+                w: experience,
+                left: MARGIN + col1Width + GAP,
+                top: menubarHeight + MARGIN + halfHeightCol2 + GAP,
+                width: col2Width,
+                height: halfHeightCol2,
+                priority: 1,
+              },
+              {
+                w: skills,
+                left: MARGIN + col1Width + GAP + col2Width + GAP,
+                top: menubarHeight + MARGIN,
+                width: col3Width,
+                height: halfHeightCol3,
+                priority: 2,
+              },
+              {
+                w: contact,
+                left: MARGIN + col1Width + GAP + col2Width + GAP,
+                top: menubarHeight + MARGIN + halfHeightCol3 + GAP,
+                width: col3Width,
+                height: halfHeightCol3,
+                priority: 2,
+              },
+            ],
+            menubarHeight,
+            margin: MARGIN,
+          };
+        }
+      } else if (aboutMe && projects && skills && contact && !experience) {
+        // Handle 4 windows: aboutMe, projects, skills, contact (experience closed)
         const col1Width = Math.round(availableWidth * 0.33);
         const col2Width = Math.round(availableWidth * 0.33);
         const col3Width = availableWidth - col1Width - col2Width - GAP * 2;
@@ -414,6 +480,60 @@ export function createPreferredLayout(
               },
               {
                 w: projects,
+                left: MARGIN + col1Width + GAP,
+                top: menubarHeight + MARGIN,
+                width: col2Width,
+                height: fullHeight,
+                priority: 1,
+              },
+              {
+                w: skills,
+                left: MARGIN + col1Width + GAP + col2Width + GAP,
+                top: menubarHeight + MARGIN,
+                width: col3Width,
+                height: halfHeight,
+                priority: 2,
+              },
+              {
+                w: contact,
+                left: MARGIN + col1Width + GAP + col2Width + GAP,
+                top: menubarHeight + MARGIN + halfHeight + GAP,
+                width: col3Width,
+                height: halfHeight,
+                priority: 2,
+              },
+            ],
+            menubarHeight,
+            margin: MARGIN,
+          };
+        }
+      } else if (aboutMe && experience && skills && contact && !projects) {
+        // Handle 4 windows: aboutMe, experience, skills, contact (projects closed)
+        const col1Width = Math.round(availableWidth * 0.33);
+        const col2Width = Math.round(availableWidth * 0.33);
+        const col3Width = availableWidth - col1Width - col2Width - GAP * 2;
+        const fullHeight = availableHeight;
+        const halfHeight = Math.round((fullHeight - GAP) / 2);
+
+        if (
+          col1Width >= MIN_W &&
+          col2Width >= MIN_W &&
+          col3Width >= MIN_W &&
+          halfHeight >= MIN_H
+        ) {
+          return {
+            type: "preferred",
+            entries: [
+              {
+                w: aboutMe,
+                left: MARGIN,
+                top: menubarHeight + MARGIN,
+                width: col1Width,
+                height: fullHeight,
+                priority: 1,
+              },
+              {
+                w: experience,
                 left: MARGIN + col1Width + GAP,
                 top: menubarHeight + MARGIN,
                 width: col2Width,
@@ -532,11 +652,12 @@ export function smartDistributeWindows(wins) {
   const getWindowPriority = (w) => {
     const appId = w.dataset.app;
     switch (appId) {
-      case "notes":
-      case "browser":
-        return 1;
       case "about":
-      case "terminal":
+      case "projects":
+      case "experience":
+        return 1;
+      case "contact":
+      case "skills":
         return 2;
       default:
         return 2;
@@ -546,16 +667,18 @@ export function smartDistributeWindows(wins) {
   const getPositionOrder = (w) => {
     const appId = w.dataset.app;
     switch (appId) {
-      case "notes":
-        return 1;
-      case "browser":
-        return 2;
-      case "terminal":
-        return 3;
       case "about":
+        return 1;
+      case "projects":
+        return 2;
+      case "experience":
+        return 3;
+      case "skills":
         return 4;
-      default:
+      case "contact":
         return 5;
+      default:
+        return 6;
     }
   };
 

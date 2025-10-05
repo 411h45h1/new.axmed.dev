@@ -20,46 +20,47 @@ import ContactContent from "../components/windows/ContactContent.astro";
 
   <!-- Windows -->
   <Window
-    appId="notes"
+    appId="about"
     title="About Me"
     initialStyle="left:160px; top:120px; width:420px; height:280px;"
-    ariaLabel="Notes window"
+    ariaLabel="About Me window"
   >
     <AboutContent />
   </Window>
 
   <Window
-    appId="briefcase"
+    appId="experience"
     title="Experience"
     initialStyle="left:240px; top:200px; width:520px; height:400px;"
     ariaLabel="Experience window"
+    hidden={true}
   >
     <ExperienceContent />
   </Window>
 
   <Window
-    appId="browser"
+    appId="projects"
     title="Projects"
     initialStyle="left:620px; top:140px;"
-    ariaLabel="Browser window"
+    ariaLabel="Projects window"
   >
     <ProjectsContent />
   </Window>
 
   <Window
-    appId="terminal"
+    appId="skills"
     title="Skills & Tech Stack"
     initialStyle="left:340px; top:430px; width:560px; height:240px;"
-    ariaLabel="Terminal window"
+    ariaLabel="Skills window"
   >
     <SkillsContent />
   </Window>
 
   <Window
-    appId="about"
+    appId="contact"
     title="Contact"
     initialStyle="left:940px; top:260px; width:360px; height:220px;"
-    ariaLabel="About window"
+    ariaLabel="Contact window"
   >
     <ContactContent />
   </Window>

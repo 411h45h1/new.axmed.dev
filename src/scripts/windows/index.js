@@ -145,6 +145,12 @@ export function initWindows() {
     const smart = smartDistributeWindows(wins);
     if (smart) {
       applySmartLayout(smart);
+      wins.forEach((w) => {
+        const currentStyle = w.getAttribute("style");
+        if (currentStyle) {
+          w.setAttribute("data-original-style", currentStyle);
+        }
+      });
       setTimeout(() => {
         document.dispatchEvent(new CustomEvent("windows:statechange"));
       }, 50);

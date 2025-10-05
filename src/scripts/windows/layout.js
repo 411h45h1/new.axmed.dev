@@ -31,7 +31,13 @@ export function calculateCenteredPositions(wins) {
 
   const windowData = [];
 
-  wins.forEach((w) => {
+  const sortedWins = [...wins].sort((a, b) => {
+    if (a.dataset.app === "about") return -1;
+    if (b.dataset.app === "about") return 1;
+    return 0;
+  });
+
+  sortedWins.forEach((w) => {
     const originalStyle =
       w.getAttribute("data-original-style") || w.getAttribute("style");
 
@@ -175,8 +181,15 @@ export function createPreferredLayout(
       const rowHeight = Math.round(availableHeight * 0.9);
 
       if (colWidth >= MIN_W && rowHeight >= MIN_H) {
+        // Sort windows to ensure "about" is on the left
+        const sortedWins = [...visibleWins].sort((a, b) => {
+          if (a.dataset.app === "about") return -1;
+          if (b.dataset.app === "about") return 1;
+          return 0;
+        });
+
         const entries = [];
-        visibleWins.forEach((w, idx) => {
+        sortedWins.forEach((w, idx) => {
           entries.push({
             w: w,
             left: MARGIN + idx * (colWidth + GAP),
@@ -206,9 +219,16 @@ export function createPreferredLayout(
         bottomWidth >= MIN_W &&
         bottomHeight >= MIN_H
       ) {
+        // Sort windows to ensure "about" is in the top-left position
+        const sortedWins = [...visibleWins].sort((a, b) => {
+          if (a.dataset.app === "about") return -1;
+          if (b.dataset.app === "about") return 1;
+          return 0;
+        });
+
         const entries = [
           {
-            w: visibleWins[0],
+            w: sortedWins[0],
             left: MARGIN,
             top: menubarHeight + MARGIN,
             width: topColWidth,
@@ -216,7 +236,7 @@ export function createPreferredLayout(
             priority: 1,
           },
           {
-            w: visibleWins[1],
+            w: sortedWins[1],
             left: MARGIN + topColWidth + GAP,
             top: menubarHeight + MARGIN,
             width: topColWidth,
@@ -224,7 +244,7 @@ export function createPreferredLayout(
             priority: 1,
           },
           {
-            w: visibleWins[2],
+            w: sortedWins[2],
             left: MARGIN + (availableWidth - bottomWidth) / 2,
             top: menubarHeight + MARGIN + topRowHeight + GAP,
             width: bottomWidth,
@@ -309,8 +329,15 @@ export function createPreferredLayout(
       const fullHeight = availableHeight;
 
       if (colWidth >= MIN_W && fullHeight >= MIN_H) {
+        // Sort windows to ensure "about" is on the left
+        const sortedWins = [...visibleWins].sort((a, b) => {
+          if (a.dataset.app === "about") return -1;
+          if (b.dataset.app === "about") return 1;
+          return 0;
+        });
+
         const entries = [];
-        visibleWins.forEach((w, idx) => {
+        sortedWins.forEach((w, idx) => {
           entries.push({
             w: w,
             left: MARGIN + idx * (colWidth + GAP),
@@ -329,7 +356,7 @@ export function createPreferredLayout(
         };
       }
     } else if (windowCount === 3) {
-      const leftColWidth = Math.round(availableWidth * 0.3);
+      const leftColWidth = Math.round(availableWidth * 0.42);
       const rightColWidth = availableWidth - leftColWidth - GAP;
       const halfHeight = Math.round((availableHeight - GAP) / 2);
       const fullHeight = availableHeight;
@@ -354,30 +381,86 @@ export function createPreferredLayout(
 
         const orderedWindows = [...priorityWindows, ...otherWindows];
 
+        const hasProjects = visibleWins.some(
+          (w) => w.dataset.app === "projects"
+        );
+        const hasExperience = visibleWins.some(
+          (w) => w.dataset.app === "experience"
+        );
+
+        if (hasProjects && hasExperience) {
+          const thirdWindow = visibleWins.find(
+            (w) =>
+              w.dataset.app !== "projects" && w.dataset.app !== "experience"
+          );
+          const projectsWindow = visibleWins.find(
+            (w) => w.dataset.app === "projects"
+          );
+          const experienceWindow = visibleWins.find(
+            (w) => w.dataset.app === "experience"
+          );
+
+          if (thirdWindow && projectsWindow && experienceWindow) {
+            const entries = [
+              {
+                w: thirdWindow,
+                left: MARGIN,
+                top: menubarHeight + MARGIN,
+                width: leftColWidth,
+                height: halfHeight,
+                priority: 2,
+              },
+              {
+                w: projectsWindow,
+                left: MARGIN,
+                top: menubarHeight + MARGIN + halfHeight + GAP,
+                width: leftColWidth,
+                height: halfHeight,
+                priority: 1,
+              },
+              {
+                w: experienceWindow,
+                left: MARGIN + leftColWidth + GAP,
+                top: menubarHeight + MARGIN,
+                width: rightColWidth,
+                height: fullHeight,
+                priority: 1,
+              },
+            ];
+
+            return {
+              type: "preferred",
+              entries: entries,
+              menubarHeight,
+              margin: MARGIN,
+            };
+          }
+        }
+
         const entries = [
           {
-            w: orderedWindows[1] || visibleWins[1],
+            w: orderedWindows[0] || visibleWins[0],
             left: MARGIN,
             top: menubarHeight + MARGIN,
             width: leftColWidth,
+            height: fullHeight,
+            priority: 1,
+          },
+          {
+            w: orderedWindows[1] || visibleWins[1],
+            left: MARGIN + leftColWidth + GAP,
+            top: menubarHeight + MARGIN,
+            width: rightColWidth,
             height: halfHeight,
             priority: 2,
           },
           {
             w: orderedWindows[2] || visibleWins[2],
-            left: MARGIN,
+            left: MARGIN + leftColWidth + GAP,
             top: menubarHeight + MARGIN + halfHeight + GAP,
-            width: leftColWidth,
+            width: rightColWidth,
             height: halfHeight,
             priority: 2,
-          },
-          {
-            w: orderedWindows[0] || visibleWins[0],
-            left: MARGIN + leftColWidth + GAP,
-            top: menubarHeight + MARGIN,
-            width: rightColWidth,
-            height: fullHeight,
-            priority: 1,
           },
         ];
 
@@ -570,8 +653,15 @@ export function createPreferredLayout(
         );
 
         if (colWidth >= MIN_W && rowHeight >= MIN_H) {
+          // Sort windows to ensure "about" is always on the left (first)
+          const sortedWins = [...visibleWins].sort((a, b) => {
+            if (a.dataset.app === "about") return -1;
+            if (b.dataset.app === "about") return 1;
+            return 0;
+          });
+
           const entries = [];
-          visibleWins.forEach((w, idx) => {
+          sortedWins.forEach((w, idx) => {
             const row = Math.floor(idx / cols);
             const col = idx % cols;
             entries.push({

@@ -6,6 +6,7 @@
   const resetBtn = document.getElementById("reset-windows-btn");
 
   const initialWindowStyles = new Map();
+  const initialVisibility = new Map(); // Track initial visibility state
   let viewportChanged = false;
 
   function storeInitialStyles() {
@@ -14,7 +15,9 @@
       const appId = win.dataset.app;
       if (!initialWindowStyles.has(appId)) {
         const initialStyle = win.getAttribute("style") || "";
+        const isVisible = !win.classList.contains("hidden");
         initialWindowStyles.set(appId, initialStyle);
+        initialVisibility.set(appId, isVisible);
       }
     });
   }
@@ -42,13 +45,16 @@
 
     const wins = document.querySelectorAll(".window");
     let isModified = false;
+    let allWindowsHaveOriginalStyle = true;
+    let visibilityChanged = false;
 
     for (const win of wins) {
-      const _appId = win.dataset.app;
+      const appId = win.dataset.app;
       const currentStyle = win.getAttribute("style") || "";
       const originalStyle = win.getAttribute("data-original-style") || "";
 
       if (!originalStyle) {
+        allWindowsHaveOriginalStyle = false;
         continue;
       }
 
@@ -61,13 +67,35 @@
       }
     }
 
-    if (isModified || viewportChanged) {
+    // Check if window visibility has changed from initial state
+    if (initialVisibility.size > 0) {
+      for (const win of wins) {
+        const appId = win.dataset.app;
+        const currentlyVisible = !win.classList.contains("hidden");
+        const initiallyVisible = initialVisibility.get(appId);
+
+        if (
+          initiallyVisible !== undefined &&
+          currentlyVisible !== initiallyVisible
+        ) {
+          visibilityChanged = true;
+          break;
+        }
+      }
+    }
+
+    if (!allWindowsHaveOriginalStyle && !isModified && !visibilityChanged) {
+      resetBtn.classList.add("faded");
+      return false;
+    }
+
+    if (isModified || viewportChanged || visibilityChanged) {
       resetBtn.classList.remove("faded");
     } else {
       resetBtn.classList.add("faded");
     }
 
-    return isModified || viewportChanged;
+    return isModified || viewportChanged || visibilityChanged;
   }
 
   function resetWindows() {
@@ -102,7 +130,11 @@
 
     viewportChanged = false;
 
+    // Update initial state after reset to reflect the new layout
     setTimeout(() => {
+      initialWindowStyles.clear();
+      initialVisibility.clear();
+      storeInitialStyles();
       checkWindowsModified();
     }, 150);
 
@@ -143,7 +175,10 @@
   setTimeout(() => {
     const wins = document.querySelectorAll(".window");
     wins.forEach((win) => {
-      observer.observe(win, { attributes: true, attributeFilter: ["style"] });
+      observer.observe(win, {
+        attributes: true,
+        attributeFilter: ["style", "class"],
+      });
     });
   }, 300);
 
@@ -225,6 +260,7 @@
           leftMenu.classList.remove("menu-open");
         }
       } else {
+        const wasHidden = win.classList.contains("hidden");
         restoreIfHidden(win);
         if (delta < 350) {
           maximizeWindow(win);
@@ -233,6 +269,9 @@
         }
         if (window.__ensureWindowsRespectMenubar) {
           setTimeout(() => window.__ensureWindowsRespectMenubar(), 0);
+        }
+        if (wasHidden) {
+          document.dispatchEvent(new CustomEvent("windows:recenter"));
         }
       }
     });

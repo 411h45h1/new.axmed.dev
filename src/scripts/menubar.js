@@ -19,7 +19,13 @@
     });
   }
 
-  storeInitialStyles();
+  let initialStylesStored = false;
+  document.addEventListener("windows:statechange", () => {
+    if (!initialStylesStored) {
+      storeInitialStyles();
+      initialStylesStored = true;
+    }
+  });
 
   function normalizeStyle(style) {
     if (!style) return "";

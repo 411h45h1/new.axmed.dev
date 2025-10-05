@@ -108,6 +108,12 @@ export function initWindows() {
   const smartLayout = smartDistributeWindows(wins);
   if (smartLayout) {
     applySmartLayout(smartLayout);
+    wins.forEach((w) => {
+      const currentStyle = w.getAttribute("style");
+      if (currentStyle) {
+        w.setAttribute("data-original-style", currentStyle);
+      }
+    });
   }
 
   if (!smartLayout) {

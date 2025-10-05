@@ -1,0 +1,25 @@
+{
+  "name": "ahmed-portfolio-astro",
+  "type": "module",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "astro dev",
+    "clean:dev": "bun clean:install && astro dev",
+    "clean:install": "bun clean && bun i",
+    "clean": "rm -rf dist .astro node_modules package-lock.json bun.lock",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "astro": "5.14.1"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.4",
+    "eslint": "^9.37.0",
+    "eslint-plugin-astro": "^1.3.1",
+    "typescript": "^5.5.0"
+  }
+}

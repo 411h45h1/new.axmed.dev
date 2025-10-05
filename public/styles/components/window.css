@@ -1,0 +1,236 @@
+.window {
+  position: absolute;
+  min-width: 240px;
+  min-height: 140px;
+  display: flex;
+  flex-direction: column;
+  background: rgba(28, 28, 30, 0.78);
+  backdrop-filter: blur(28px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: var(--window-radius);
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+
+  transition: left var(--transition-slow), top var(--transition-slow),
+    width var(--transition-slow), height var(--transition-slow),
+    border-radius var(--transition-slow), box-shadow var(--transition-fast);
+}
+
+.window.pre-center {
+  visibility: hidden;
+}
+
+.window.focused {
+  box-shadow: 0 16px 64px rgba(0, 0, 0, 0.65),
+    0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+}
+
+.window.maximized {
+  left: 12px !important;
+  top: calc(var(--menubar-height) + 8px) !important;
+  width: calc(100vw - 24px) !important;
+  height: calc(
+    100vh - var(--menubar-height) - var(--dock-height) - 30px
+  ) !important;
+  border-radius: 14px !important;
+}
+
+.window.maximized .titlebar {
+  cursor: default !important;
+}
+
+.window.interacting {
+  transition: none !important;
+}
+
+.window.boot-in {
+  animation: windowEnter 480ms cubic-bezier(0.2, 0.8, 0.25, 1) both;
+}
+
+@keyframes windowEnter {
+  0% {
+    opacity: 0;
+    transform: scale(0.94) translateY(12px);
+    filter: blur(6px);
+  }
+  55% {
+    opacity: 1;
+    transform: scale(1.015) translateY(0);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.window.minimizing {
+  pointer-events: none;
+}
+
+.window.minimized {
+  animation: minimizeShrink 0.35s forwards;
+  transform-origin: bottom center;
+}
+
+@keyframes minimizeShrink {
+  0% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.4) translateY(120%);
+    opacity: 0;
+  }
+}
+
+.titlebar {
+  flex: 0 0 var(--titlebar-height);
+  height: var(--titlebar-height);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 14px;
+  -webkit-user-select: none;
+  user-select: none;
+  cursor: grab;
+  font-size: 13px;
+  font-weight: 500;
+  background: rgba(255, 255, 255, 0.02);
+  border-bottom: 1px solid var(--separator);
+}
+
+.titlebar:active {
+  cursor: grabbing;
+}
+
+.window-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.window-button {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: pointer;
+}
+
+.window-button:active {
+  filter: brightness(0.85);
+}
+
+.window-button.close {
+  background: var(--accent-red);
+}
+
+.window-button.minimize {
+  background: var(--accent-yellow);
+}
+
+.window-button.maximize {
+  background: var(--accent-green);
+}
+
+.window-button::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25) inset;
+}
+
+.window-button svg {
+  width: 10px;
+  height: 10px;
+  opacity: 0;
+  transition: var(--transition-fast);
+}
+
+.titlebar:hover .window-button svg {
+  opacity: 0.9;
+}
+
+.window-content {
+  flex: 1 1 auto;
+  padding: 16px 18px 20px;
+  -webkit-user-select: text;
+  user-select: text;
+  font-size: 14px;
+  line-height: 1.5;
+  overflow: auto;
+  color: var(--text-primary);
+}
+
+.window-content::-webkit-scrollbar {
+  width: 12px;
+}
+
+.window-content::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 4px;
+}
+
+.window-content::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.22);
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.window-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.32);
+  background-clip: padding-box;
+}
+
+.window-content a {
+  color: #0a84ff;
+  text-decoration: none;
+  transition: opacity var(--transition-fast);
+}
+
+.window-content a:hover {
+  opacity: 0.75;
+  text-decoration: underline;
+}
+
+.window-content h3,
+.window-content h4 {
+  margin-top: 0;
+}
+
+.window-content ul {
+  margin: 8px 0;
+}
+
+.window-resizer {
+  position: absolute;
+  right: 6px;
+  bottom: 4px;
+  width: 16px;
+  height: 16px;
+  cursor: nwse-resize;
+  opacity: 0.55;
+}
+
+.window-resizer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    transparent 45%,
+    rgba(0, 0, 0, 0.5) 46%,
+    rgba(0, 0, 0, 0.5) 52%,
+    transparent 53%
+  );
+  opacity: 0.25;
+}
+
+.window.maximized .window-resizer {
+  display: none;
+}

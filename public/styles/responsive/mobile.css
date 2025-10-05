@@ -1,0 +1,310 @@
+@media (max-width: 767px) {
+  body {
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  #menubar::before {
+    display: none;
+  }
+
+  #menubar {
+    padding: 0 8px;
+    position: relative;
+  }
+
+  #menubar::after {
+    content: attr(data-screen-title);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 16px;
+    font-weight: 600;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  #menubar .left {
+    position: fixed;
+    left: -100%;
+    top: var(--menubar-height);
+    width: 70%;
+    max-width: 280px;
+    height: calc(100vh - var(--menubar-height));
+    background: rgba(20, 20, 22, 0.98);
+    backdrop-filter: blur(28px);
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px;
+    gap: 0;
+    z-index: 1000;
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  #menubar .left.menu-open {
+    left: 0;
+  }
+
+  #menubar .app-name {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--separator);
+    width: 100%;
+  }
+
+  #menubar .menu-item {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 16px;
+    border-radius: 8px;
+    margin: 4px 0;
+  }
+
+  #menubar .right {
+    margin-left: auto;
+    gap: 12px;
+  }
+
+  #menubar .status-icon {
+    display: none;
+  }
+
+  #menubar .reset-button {
+    display: none;
+  }
+
+  #clock {
+    font-size: 14px;
+  }
+
+  #dock-wrapper {
+    bottom: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #dock {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    height: var(--dock-height);
+    border-radius: 0;
+    padding: 4px 0;
+    justify-content: space-around;
+    align-items: center;
+    gap: 0;
+    left: 0;
+    transform: none;
+  }
+
+  .dock-item {
+    all: unset;
+    flex: 1 1 0;
+    min-width: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    padding: 6px 8px;
+    margin: 0;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: background var(--transition-fast);
+    box-sizing: border-box;
+  }
+
+  .dock-item:active {
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  .dock-item svg {
+    width: 26px;
+    height: 26px;
+    flex-shrink: 0;
+    display: block;
+  }
+
+  .dock-label {
+    position: static;
+    bottom: auto;
+    top: auto;
+    left: auto;
+    margin: 0;
+    font-size: 11px;
+    opacity: 1;
+    background: transparent;
+    padding: 0;
+    transform: none;
+    pointer-events: none;
+    text-align: center;
+    line-height: 1.1;
+    white-space: nowrap;
+    font-weight: 600;
+    display: block;
+    letter-spacing: -0.01em;
+  }
+
+  .dock-item:hover .dock-label {
+    opacity: 1;
+    transform: none;
+  }
+
+  .dock-item {
+    transform: none !important;
+  }
+
+  .dock-indicator {
+    display: none;
+  }
+
+  .window {
+    position: fixed !important;
+    left: 0 !important;
+    top: var(--menubar-height) !important;
+    width: 100% !important;
+    height: calc(100vh - var(--menubar-height) - var(--dock-height)) !important;
+    border-radius: 0 !important;
+    border-left: none;
+    border-right: none;
+    min-width: 100%;
+    min-height: auto;
+    z-index: 100 !important;
+  }
+
+  .window.hidden {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+  .window.focused {
+    box-shadow: none;
+    z-index: 100 !important;
+  }
+
+  .window.maximized {
+    left: 0 !important;
+    top: var(--menubar-height) !important;
+    width: 100% !important;
+    height: calc(100vh - var(--menubar-height) - var(--dock-height)) !important;
+  }
+
+  .titlebar {
+    display: none !important;
+  }
+
+  .window-resizer {
+    display: none !important;
+  }
+
+  .window-content {
+    padding: 20px 16px;
+    font-size: 16px;
+    line-height: 1.65;
+  }
+
+  .window-content h3 {
+    font-size: 22px;
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+
+  .window-content h4 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    margin-top: 16px;
+    font-weight: 600;
+  }
+
+  .window-content p {
+    margin: 12px 0;
+    line-height: 1.7;
+  }
+
+  .window-content ul {
+    padding-left: 24px;
+    margin: 12px 0;
+  }
+
+  .window-content li {
+    margin: 8px 0;
+    line-height: 1.6;
+  }
+
+  .window.boot-in {
+    animation: none;
+  }
+
+  .window {
+    transition: opacity var(--transition-fast) !important;
+  }
+}
+
+@media (max-width: 767px) and (orientation: landscape) {
+  .window {
+    height: calc(100vh - var(--menubar-height)) !important;
+  }
+
+  .window.maximized {
+    height: calc(100vh - var(--menubar-height)) !important;
+  }
+
+  #dock-wrapper {
+    display: none;
+  }
+}
+
+@media (max-width: 374px) {
+  #menubar .app-name {
+    font-size: 14px;
+  }
+
+  #clock {
+    font-size: 12px;
+  }
+
+  .dock-item {
+    padding: 5px 6px;
+  }
+
+  .dock-item svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .dock-label {
+    font-size: 10px;
+  }
+
+  .window-content {
+    padding: 16px 12px;
+    font-size: 15px;
+  }
+
+  .window-content h3 {
+    font-size: 20px;
+  }
+
+  .window-content h4 {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 767px) {
+  .titlebar,
+  #menubar,
+  #dock,
+  .window-buttons {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+}

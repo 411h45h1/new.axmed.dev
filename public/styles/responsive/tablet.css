@@ -1,0 +1,59 @@
+@media (min-width: 768px) and (max-width: 1024px) {
+  #menubar .left {
+    gap: 12px;
+  }
+
+  #menubar .menu-item {
+    font-size: 13px;
+    padding: 6px 10px;
+  }
+
+  #dock {
+    max-width: 90%;
+    padding: 10px 14px;
+  }
+
+  .dock-item button {
+    width: 52px;
+    height: 52px;
+  }
+
+  .window {
+    min-width: 320px;
+    min-height: 200px;
+  }
+
+  .window.maximized {
+    left: 8px !important;
+    top: calc(var(--menubar-height) + 8px) !important;
+    width: calc(100vw - 16px) !important;
+    height: calc(
+      100vh - var(--menubar-height) - var(--dock-height) - 24px
+    ) !important;
+    border-radius: 10px !important;
+  }
+
+  .window-button {
+    width: 14px;
+    height: 14px;
+  }
+
+  .window-button svg {
+    width: 10px;
+    height: 10px;
+  }
+
+  .window-content {
+    padding: 16px 18px;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  .window-content h3 {
+    font-size: 20px;
+  }
+
+  .window-content h4 {
+    font-size: 17px;
+  }
+}

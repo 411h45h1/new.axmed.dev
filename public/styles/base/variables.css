@@ -1,0 +1,46 @@
+:root {
+  --blur-strength: 32px;
+  --glass-bg: rgba(30, 30, 32, 0.68);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.48);
+
+  --transition-fast: 150ms cubic-bezier(0.4, 0.2, 0.2, 1);
+  --transition-slow: 400ms cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  --accent-red: #ff5f57;
+  --accent-yellow: #ffbd2e;
+  --accent-green: #28cd41;
+
+  --window-radius: 12px;
+  --titlebar-height: 32px;
+  --menubar-height: 28px;
+  --dock-height: 84px;
+
+  --font-stack: -apple-system, BlinkMacSystemFont, "SF Pro Text",
+    "Helvetica Neue", system-ui, sans-serif;
+
+  --noise-opacity: 0.08;
+
+  --text-primary: rgba(255, 255, 255, 0.92);
+  --text-secondary: rgba(255, 255, 255, 0.68);
+  --separator: rgba(255, 255, 255, 0.08);
+}
+
+@media (max-width: 767px) {
+  :root {
+    --window-radius: 0px;
+    --titlebar-height: 44px;
+    --menubar-height: 44px;
+    --dock-height: 52px;
+    --blur-strength: 20px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  :root {
+    --window-radius: 8px;
+    --titlebar-height: 36px;
+    --menubar-height: 32px;
+    --dock-height: 70px;
+  }
+}

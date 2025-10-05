@@ -1,0 +1,85 @@
+#dock-wrapper {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 10px;
+  height: var(--dock-height);
+  z-index: 900;
+  pointer-events: none;
+}
+
+#dock {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  padding: 8px 14px 12px;
+  border-radius: 18px;
+  backdrop-filter: blur(var(--blur-strength)) saturate(200%);
+  background: rgba(30, 30, 32, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.55),
+    0 0 0 0.5px rgba(255, 255, 255, 0.08) inset;
+  pointer-events: auto;
+}
+
+.dock-item {
+  all: unset;
+  position: relative;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 120ms ease, margin 120ms ease;
+  will-change: transform;
+  cursor: pointer;
+}
+
+.dock-item svg {
+  width: 60%;
+  height: 60%;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.35));
+}
+
+.dock-label {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%) scale(0.8);
+  background: #222;
+  color: #fff;
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  opacity: 0;
+  pointer-events: none;
+  white-space: nowrap;
+  transition: var(--transition-fast);
+}
+
+.dock-item:hover .dock-label {
+  opacity: 1;
+  transform: translateX(-50%) scale(1);
+}
+
+.dock-indicator {
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #fff;
+  opacity: 0;
+  transition: var(--transition-fast);
+  box-shadow: 0 0 4px #fff;
+}
+
+.dock-item.active .dock-indicator {
+  opacity: 1;
+}

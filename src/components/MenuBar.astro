@@ -1,0 +1,77 @@
+---
+// MenuBar Component
+---
+
+<header id="menubar" role="menubar" aria-label="Desktop menu bar">
+  <div class="left">
+    <span class="app-name" tabindex="0">Ahmed Ali</span>
+    <span class="menu-item" data-app="notes" tabindex="0">About</span>
+    <span class="menu-item" data-app="briefcase" tabindex="0">Experience</span>
+    <span class="menu-item" data-app="browser" tabindex="0">Projects</span>
+    <span class="menu-item" data-app="terminal" tabindex="0">Skills</span>
+    <span class="menu-item" data-app="about" tabindex="0">Contact</span>
+  </div>
+  <div class="right">
+    <button
+      id="reset-windows-btn"
+      class="reset-button faded"
+      aria-label="Reset window positions"
+      title="Reset window positions"
+      tabindex="0"
+    >
+      <svg
+        stroke="currentColor"
+        fill="currentColor"
+        stroke-width="0"
+        viewBox="0 0 16 16"
+        xmlns="http://www.w3.org/2000/svg"
+        ><path
+          d="M6 1H1v14h5zm9 0h-5v5h5zm0 9v5h-5v-5zM0 1a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1zm9 0a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1h-5a1 1 0 0 1-1-1zm1 8a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h5a1 1 0 0 0 1-1v-5a1 1 0 0 0-1-1z"
+        ></path>
+      </svg>
+    </button>
+    <span class="status-icon" aria-label="Wi-Fi" title="Wi-Fi">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="1em"
+        height="1em"
+        fill="currentColor"
+        stroke="currentColor"
+        stroke-width="0"
+        aria-hidden="true"
+        viewBox="0 0 20 20"
+        ><path
+          fill-rule="evenodd"
+          stroke="none"
+          d="M.676 6.941A12.96 12.96 0 0 1 10 3c3.657 0 6.963 1.511 9.324 3.941a.75.75 0 0 1-.008 1.053l-.353.354a.75.75 0 0 1-1.069-.008C15.894 6.28 13.097 5 10 5S4.106 6.28 2.106 8.34a.75.75 0 0 1-1.069.008l-.353-.354a.75.75 0 0 1-.008-1.053m2.825 2.833A8.98 8.98 0 0 1 10 7a8.98 8.98 0 0 1 6.499 2.774.75.75 0 0 1-.011 1.049l-.354.354a.75.75 0 0 1-1.072-.012A6.98 6.98 0 0 0 10 9c-1.99 0-3.786.83-5.061 2.165a.75.75 0 0 1-1.073.012l-.354-.354a.75.75 0 0 1-.01-1.05Zm2.82 2.84A4.99 4.99 0 0 1 10 11c1.456 0 2.767.623 3.68 1.614a.75.75 0 0 1-.022 1.039l-.354.354a.75.75 0 0 1-1.085-.026A3 3 0 0 0 10 13c-.88 0-1.67.377-2.22.981a.75.75 0 0 1-1.084.026l-.354-.354a.75.75 0 0 1-.021-1.039m2.795 2.752a1.25 1.25 0 0 1 1.768 0 .75.75 0 0 1 0 1.06l-.354.354a.75.75 0 0 1-1.06 0l-.354-.353a.75.75 0 0 1 0-1.06Z"
+          clip-rule="evenodd"></path></svg
+      >
+    </span>
+    <span class="status-icon" aria-label="Battery" title="Battery">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="1em"
+        height="1em"
+        fill="currentColor"
+        stroke="currentColor"
+        stroke-width="0"
+        aria-hidden="true"
+        viewBox="0 0 20 20"
+        ><path
+          stroke="none"
+          d="M4.75 8a.75.75 0 0 0-.75.75v2.5c0 .414.336.75.75.75H9.5a.75.75 0 0 0 .75-.75v-2.5A.75.75 0 0 0 9.5 8z"
+        ></path><path
+          fill-rule="evenodd"
+          stroke="none"
+          d="M3.25 5A2.25 2.25 0 0 0 1 7.25v5.5A2.25 2.25 0 0 0 3.25 15h12.5A2.25 2.25 0 0 0 18 12.75v-1.085a1.5 1.5 0 0 0 1-1.415v-.5a1.5 1.5 0 0 0-1-1.415V7.25A2.25 2.25 0 0 0 15.75 5zM2.5 7.25a.75.75 0 0 1 .75-.75h12.5a.75.75 0 0 1 .75.75v5.5a.75.75 0 0 1-.75.75H3.25a.75.75 0 0 1-.75-.75z"
+          clip-rule="evenodd"></path></svg
+      >
+    </span>
+    <span id="clock" aria-label="Current time" title="Clock">--:--</span>
+  </div>
+</header>
+
+<script>
+  import "../scripts/clock.js";
+  import "../scripts/menubar.js";
+</script>

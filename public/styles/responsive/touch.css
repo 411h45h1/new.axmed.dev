@@ -1,0 +1,30 @@
+@media (hover: none) and (pointer: coarse) {
+  .dock-item .dock-label {
+    opacity: 1 !important;
+  }
+
+  .window-button svg {
+    opacity: 0.9;
+  }
+
+  .titlebar:hover .window-button svg {
+    opacity: 0.9;
+  }
+
+  .window-button {
+    position: relative;
+  }
+
+  .window-button::before {
+    content: "";
+    position: absolute;
+    inset: -15px;
+    border-radius: 50%;
+  }
+
+  .menu-item {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+}

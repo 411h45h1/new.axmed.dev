@@ -1,0 +1,12 @@
+@import "./base/variables.css";
+@import "./base/reset.css";
+
+@import "./components/wallpaper.css";
+@import "./components/menubar.css";
+@import "./components/dock.css";
+@import "./components/window.css";
+@import "./components/terminal.css";
+
+@import "./responsive/mobile.css";
+@import "./responsive/tablet.css";
+@import "./responsive/touch.css";

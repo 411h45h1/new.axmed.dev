@@ -1,0 +1,373 @@
+import { isMobile, isTablet } from "./responsive.js";
+import { hasViewportChanged, storeViewportDimensions } from "./viewport.js";
+import {
+  calculateCenteredPositions,
+  smartDistributeWindows,
+  applyCenteredPositions,
+  applySmartLayout,
+} from "./layout.js";
+import { loadState, saveState } from "./persistence.js";
+
+const STATE_EVENT = "windows:statechange";
+
+if (typeof window !== "undefined") {
+  if (!window.__WINDOWS_INITED__) {
+    window.__WINDOWS_INITED__ = false;
+  }
+}
+
+export function initWindows() {
+  if (typeof window !== "undefined" && window.__WINDOWS_INITED__) {
+    return;
+  }
+  if (typeof window !== "undefined") window.__WINDOWS_INITED__ = true;
+
+  const wins = Array.from(document.querySelectorAll(".window"));
+  wins.forEach((w) => w.classList.add("pre-center"));
+
+  if (!isMobile()) {
+    wins.forEach((w) => w.classList.add("boot-in"));
+    setTimeout(() => wins.forEach((w) => w.classList.remove("boot-in")), 520);
+  }
+
+  let zCounter = 100;
+
+  // Initialize all windows with z-index values on load
+  wins.forEach((w, index) => {
+    w.style.zIndex = zCounter + index;
+  });
+  zCounter += wins.length;
+
+  function focus(win) {
+    wins.forEach((w) => w.classList.remove("focused"));
+    win.classList.add("focused");
+    win.style.zIndex = ++zCounter;
+  }
+
+  if (isMobile()) {
+    wins.forEach((w) => {
+      const appId = w.dataset.app;
+      if (appId === "notes") {
+        w.classList.remove("hidden");
+        focus(w);
+      } else {
+        w.classList.add("hidden");
+      }
+    });
+  } else {
+    const firstVisibleWindow = wins.find(
+      (w) => !w.classList.contains("hidden")
+    );
+    if (firstVisibleWindow) {
+      focus(firstVisibleWindow);
+    }
+  }
+
+  function ensureWindowsRespectMenubar() {
+    const menubarHeight =
+      parseInt(
+        getComputedStyle(document.documentElement).getPropertyValue(
+          "--menubar-height"
+        )
+      ) || 28;
+
+    wins.forEach((w) => {
+      if (!w.classList.contains("hidden") && !isMobile()) {
+        const rect = w.getBoundingClientRect();
+        if (rect.top < menubarHeight) {
+          w.style.top = menubarHeight + 10 + "px";
+        }
+      }
+    });
+  }
+
+  // Make the function available globally for dock/menubar
+  window.__ensureWindowsRespectMenubar = ensureWindowsRespectMenubar;
+
+  const smartLayout = smartDistributeWindows(wins);
+  if (smartLayout) {
+    applySmartLayout(smartLayout);
+  }
+
+  if (!smartLayout) {
+    const centeredPositions = calculateCenteredPositions(wins);
+    if (centeredPositions) {
+      applyCenteredPositions(centeredPositions);
+      centeredPositions.windowData.forEach(({ w }) => {
+        const currentStyle = w.getAttribute("style");
+        w.setAttribute("data-original-style", currentStyle);
+      });
+    }
+  }
+
+  requestAnimationFrame(() => {
+    wins.forEach((w) => w.classList.remove("pre-center"));
+  });
+
+  if (hasViewportChanged()) {
+    document.dispatchEvent(new CustomEvent("viewport:changed"));
+  }
+
+  storeViewportDimensions();
+  setTimeout(ensureWindowsRespectMenubar, 100);
+
+  document.addEventListener("windows:recenter", () => {
+    const smart = smartDistributeWindows(wins);
+    if (smart) {
+      applySmartLayout(smart);
+      return;
+    }
+    const newPositions = calculateCenteredPositions(wins);
+    if (newPositions) {
+      applyCenteredPositions(newPositions);
+      newPositions.windowData.forEach(({ w }) => {
+        const currentStyle = w.getAttribute("style");
+        w.setAttribute("data-original-style", currentStyle);
+      });
+    }
+  });
+
+  let resizeTimer;
+  let previousDeviceType = isMobile()
+    ? "mobile"
+    : isTablet()
+    ? "tablet"
+    : "desktop";
+
+  window.addEventListener("resize", () => {
+    clearTimeout(resizeTimer);
+
+    resizeTimer = setTimeout(() => {
+      const currentDeviceType = isMobile()
+        ? "mobile"
+        : isTablet()
+        ? "tablet"
+        : "desktop";
+      const deviceTypeChanged = currentDeviceType !== previousDeviceType;
+      const viewportChanged = hasViewportChanged();
+
+      if (viewportChanged) {
+        document.dispatchEvent(new CustomEvent("viewport:changed"));
+        storeViewportDimensions();
+      }
+
+      if (deviceTypeChanged) {
+        previousDeviceType = currentDeviceType;
+        document.dispatchEvent(new CustomEvent("windows:recenter"));
+      } else if (viewportChanged && !isMobile()) {
+        document.dispatchEvent(new CustomEvent("windows:recenter"));
+      }
+
+      if (isMobile()) {
+        wins.forEach((w) => {
+          if (w.classList.contains("hidden")) return;
+          w.style.removeProperty("left");
+          w.style.removeProperty("top");
+          w.style.removeProperty("width");
+          w.style.removeProperty("height");
+        });
+      }
+    }, 250);
+  });
+
+  function emitState() {
+    document.dispatchEvent(new CustomEvent(STATE_EVENT));
+  }
+  wins.forEach((win) => {
+    const titlebar = win.querySelector(".titlebar");
+    let dragging = false,
+      startX = 0,
+      startY = 0,
+      origX = 0,
+      origY = 0;
+
+    if (isMobile()) {
+      return;
+    }
+
+    titlebar.addEventListener("mousedown", (e) => {
+      if (e.target.closest(".window-button")) return;
+      if (win.classList.contains("maximized")) return;
+      dragging = true;
+      startX = e.clientX;
+      startY = e.clientY;
+      const rect = win.getBoundingClientRect();
+      origX = rect.left;
+      origY = rect.top;
+      focus(win);
+      win.classList.add("interacting");
+      e.preventDefault();
+    });
+    window.addEventListener("mousemove", (e) => {
+      if (!dragging) return;
+      const dx = e.clientX - startX,
+        dy = e.clientY - startY;
+      let nx = origX + dx,
+        ny = origY + dy;
+      const margin = 40;
+      const menubarHeight =
+        parseInt(
+          getComputedStyle(document.documentElement).getPropertyValue(
+            "--menubar-height"
+          )
+        ) || 28;
+
+      nx = Math.min(
+        window.innerWidth - margin,
+        Math.max(-(win.getBoundingClientRect().width - margin), nx)
+      );
+      ny = Math.min(window.innerHeight - margin, Math.max(menubarHeight, ny));
+
+      win.style.left = nx + "px";
+      win.style.top = ny + "px";
+    });
+    window.addEventListener("mouseup", () => {
+      dragging = false;
+      win.classList.remove("interacting");
+    });
+    titlebar.addEventListener("dblclick", () => toggleMaximize(win));
+  });
+
+  wins.forEach((win) => {
+    const resizer = win.querySelector(".window-resizer");
+
+    if (isMobile()) {
+      return;
+    }
+
+    let resizing = false,
+      startX = 0,
+      startY = 0,
+      startW = 0,
+      startH = 0;
+    resizer.addEventListener("mousedown", (e) => {
+      if (win.classList.contains("maximized")) return;
+      resizing = true;
+      startX = e.clientX;
+      startY = e.clientY;
+      const r = win.getBoundingClientRect();
+      startW = r.width;
+      startH = r.height;
+      focus(win);
+      win.classList.add("interacting");
+      e.preventDefault();
+    });
+    window.addEventListener("mousemove", (e) => {
+      if (!resizing) return;
+      const dx = e.clientX - startX,
+        dy = e.clientY - startY;
+      let nw = startW + dx,
+        nh = startH + dy;
+      nw = Math.max(240, Math.min(nw, window.innerWidth - win.offsetLeft - 20));
+      nh = Math.max(140, Math.min(nh, window.innerHeight - win.offsetTop - 20));
+      win.style.width = nw + "px";
+      win.style.height = nh + "px";
+    });
+    window.addEventListener("mouseup", () => {
+      resizing = false;
+      win.classList.remove("interacting");
+    });
+  });
+
+  document.querySelectorAll(".window-button").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      const win = btn.closest(".window");
+      const action = btn.dataset.action;
+      switch (action) {
+        case "close":
+          win.classList.add("hidden");
+          document.dispatchEvent(new CustomEvent("viewport:changed"));
+          break;
+        case "minimize":
+          if (!win.classList.contains("hidden")) {
+            playMinimize(win, () => {
+              win.classList.add("hidden");
+              document.dispatchEvent(new CustomEvent("viewport:changed"));
+              emitState();
+            });
+          }
+          return emitState();
+        case "maximize":
+          toggleMaximize(win);
+          break;
+      }
+      emitState();
+      e.stopPropagation();
+    });
+  });
+
+  document.addEventListener("click", (e) => {
+    const w = e.target.closest(".window");
+    if (w) focus(w);
+  });
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      const focused = document.querySelector(".window.focused.maximized");
+      if (focused) toggleMaximize(focused);
+    }
+  });
+
+  loadState(wins);
+
+  function toggleMaximize(win) {
+    const goingMax = !win.classList.contains("maximized");
+    if (goingMax) {
+      win.dataset.prevInline = win.getAttribute("style") || "";
+      win.style.removeProperty("left");
+      win.style.removeProperty("top");
+      win.style.removeProperty("width");
+      win.style.removeProperty("height");
+      win.classList.add("maximized");
+      focus(win);
+      saveState(wins);
+    } else {
+      win.classList.remove("maximized");
+      if (!isMobile()) {
+        const prev = win.dataset.prevInline || "";
+        win.setAttribute("style", prev);
+      }
+      focus(win);
+      saveState(wins);
+    }
+  }
+
+  function playMinimize(win, done) {
+    const app = win.dataset.app;
+    const dockItem = document.querySelector(`.dock-item[data-app="${app}"]`);
+    if (!dockItem) {
+      win.classList.add("minimized");
+      setTimeout(() => {
+        done();
+        win.classList.remove("minimized");
+        saveState(wins);
+      }, 360);
+      return;
+    }
+    const wRect = win.getBoundingClientRect();
+    const dRect = dockItem.getBoundingClientRect();
+    const toX = dRect.left + dRect.width / 2 - (wRect.left + wRect.width / 2);
+    const toY = dRect.top + dRect.height / 2 - (wRect.top + wRect.height / 2);
+    win.style.transformOrigin = "center center";
+    win.style.transition =
+      "transform 360ms cubic-bezier(.4,.8,.2,1), opacity 360ms";
+    requestAnimationFrame(() => {
+      win.style.transform = `translate(${toX}px, ${toY}px) scale(.25)`;
+      win.style.opacity = "0";
+    });
+    const clear = () => {
+      win.style.transition = "";
+      win.style.transform = "";
+      win.style.opacity = "";
+      win.removeEventListener("transitionend", clear);
+      done();
+      saveState(wins);
+    };
+    win.addEventListener("transitionend", clear);
+  }
+
+  ["mouseup", "mouseleave"].forEach((ev) =>
+    window.addEventListener(ev, () => saveState(wins))
+  );
+
+  return { focus, toggleMaximize, emitState };
+}

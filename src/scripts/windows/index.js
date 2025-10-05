@@ -32,7 +32,6 @@ export function initWindows() {
 
   let zCounter = 100;
 
-  // Initialize all windows with z-index values on load
   wins.forEach((w, index) => {
     w.style.zIndex = zCounter + index;
   });
@@ -124,6 +123,9 @@ export function initWindows() {
 
   requestAnimationFrame(() => {
     wins.forEach((w) => w.classList.remove("pre-center"));
+    setTimeout(() => {
+      document.dispatchEvent(new CustomEvent("windows:statechange"));
+    }, 50);
   });
 
   if (hasViewportChanged()) {
@@ -137,6 +139,9 @@ export function initWindows() {
     const smart = smartDistributeWindows(wins);
     if (smart) {
       applySmartLayout(smart);
+      setTimeout(() => {
+        document.dispatchEvent(new CustomEvent("windows:statechange"));
+      }, 50);
       return;
     }
     const newPositions = calculateCenteredPositions(wins);
@@ -146,6 +151,9 @@ export function initWindows() {
         const currentStyle = w.getAttribute("style");
         w.setAttribute("data-original-style", currentStyle);
       });
+      setTimeout(() => {
+        document.dispatchEvent(new CustomEvent("windows:statechange"));
+      }, 50);
     }
   });
 
@@ -310,7 +318,6 @@ export function initWindows() {
       let newLeft = startLeft;
       let newTop = startTop;
 
-      // Handle different resize modes
       switch (resizeMode) {
         case "bottom-right":
           newWidth = startW + dx;
@@ -348,7 +355,6 @@ export function initWindows() {
           break;
       }
 
-      // Apply constraints
       const minWidth = 240;
       const minHeight = 140;
 
@@ -371,7 +377,6 @@ export function initWindows() {
         newHeight = Math.max(minHeight, Math.min(newHeight, maxHeight));
       }
 
-      // Apply styles
       win.style.width = newWidth + "px";
       win.style.height = newHeight + "px";
 

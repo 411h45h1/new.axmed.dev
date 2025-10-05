@@ -21,6 +21,16 @@
 
   storeInitialStyles();
 
+  function normalizeStyle(style) {
+    if (!style) return "";
+    return style
+      .replace(/z-index:\s*\d+;?/g, "")
+      .replace(/;\s*;/g, ";")
+      .replace(/;\s*$/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
   function checkWindowsModified() {
     if (!resetBtn) return false;
 
@@ -30,16 +40,16 @@
     for (const win of wins) {
       const _appId = win.dataset.app;
       const currentStyle = win.getAttribute("style") || "";
-      const centeredStyle = win.getAttribute("data-original-style") || "";
+      const originalStyle = win.getAttribute("data-original-style") || "";
 
-      const normalizeCurrent = currentStyle
-        .replace(/z-index:\s*\d+;?/g, "")
-        .trim();
-      const normalizeCentered = centeredStyle
-        .replace(/z-index:\s*\d+;?/g, "")
-        .trim();
+      if (!originalStyle) {
+        continue;
+      }
 
-      if (normalizeCurrent !== normalizeCentered) {
+      const normalizedCurrent = normalizeStyle(currentStyle);
+      const normalizedOriginal = normalizeStyle(originalStyle);
+
+      if (normalizedCurrent !== normalizedOriginal) {
         isModified = true;
         break;
       }
@@ -215,7 +225,6 @@
         } else {
           focusWindow(win);
         }
-        // Ensure window doesn't appear under menubar
         if (window.__ensureWindowsRespectMenubar) {
           setTimeout(() => window.__ensureWindowsRespectMenubar(), 0);
         }

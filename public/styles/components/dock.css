@@ -34,9 +34,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 120ms ease, margin 120ms ease;
+  transition: transform 120ms ease, margin 120ms ease,
+    box-shadow var(--transition-fast);
   will-change: transform;
   cursor: pointer;
+  border-radius: 12px;
+}
+
+.dock-item:focus-visible {
+  outline: 2px solid #0a84ff;
+  outline-offset: 4px;
+  box-shadow: 0 0 0 4px rgba(10, 132, 255, 0.2);
 }
 
 .dock-item svg {

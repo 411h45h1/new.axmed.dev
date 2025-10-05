@@ -1,8 +1,12 @@
 ---
 const {
-  title = "Ahmed's Portfolio | Full Stack Developer",
+  title = "Ahmed Ali | Full Stack Developer",
   description = "Interactive portfolio of Ahmed - Full Stack Software Developer. Explore projects, skills, and experience in a unique macOS-inspired interface.",
+  image = "/og-image.png",
+  canonicalURL = new URL(Astro.url.pathname, Astro.site),
 } = Astro.props;
+
+const siteUrl = "https://axmed.dev";
 ---
 
 <!doctype html>
@@ -13,15 +17,111 @@ const {
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
+
+    <!-- Primary Meta Tags -->
+    <title>{title}</title>
+    <meta name="title" content={title} />
+    <meta name="description" content={description} />
+    <meta name="author" content="Ahmed Ali" />
+    <meta name="robots" content="index, follow" />
+    <meta name="googlebot" content="index, follow" />
+    <link rel="canonical" href={canonicalURL} />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(image, siteUrl)} />
+    <meta property="og:site_name" content="Ahmed Ali Portfolio" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonicalURL} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={new URL(image, siteUrl)} />
+    <meta name="twitter:creator" content="@aalijsx" />
+    <meta name="twitter:site" content="@aalijsx" />
+
+    <!-- Mobile & PWA -->
     <meta name="mobile-web-app-capable" content="yes" />
     <meta
       name="apple-mobile-web-app-status-bar-style"
       content="black-translucent"
     />
+    <meta name="apple-mobile-web-app-title" content="Ahmed Ali" />
     <meta name="theme-color" content="#1a1a1d" />
-    <title>{title}</title>
-    <meta name="description" content={description} />
+    <meta name="msapplication-TileColor" content="#1a1a1d" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <!-- Preconnect for Performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+
+    <!-- Stylesheet -->
     <link rel="stylesheet" href="/styles/main.css" />
+
+    <!-- Structured Data (JSON-LD) -->
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Person",
+        name: "Ahmed Ali",
+        url: siteUrl,
+        image: new URL(image, siteUrl),
+        sameAs: [
+          "https://github.com/411h45h1",
+          "https://x.com/aalijsx",
+          "https://www.linkedin.com/in/ahmed-abdikarin-ali/",
+        ],
+        jobTitle: "Full Stack Developer",
+        worksFor: {
+          "@type": "Organization",
+          name: "Notso Software",
+        },
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: "Toronto",
+          addressRegion: "ON",
+          addressCountry: "CA",
+        },
+        description: description,
+        knowsAbout: [
+          "JavaScript",
+          "TypeScript",
+          "React",
+          "React Native",
+          "Node.js",
+          "Next.js",
+          "Full Stack Development",
+          "Mobile Development",
+          "Web Development",
+        ],
+      })}
+    />
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        name: "Ahmed Ali Portfolio",
+        url: siteUrl,
+        description: description,
+        author: {
+          "@type": "Person",
+          name: "Ahmed Ali",
+        },
+        inLanguage: "en-US",
+      })}
+    />
   </head>
   <body>
     <slot />

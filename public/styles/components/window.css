@@ -118,10 +118,23 @@
   justify-content: center;
   position: relative;
   cursor: pointer;
+  border: none;
+  padding: 0;
+  transition: filter var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.window-button:hover {
+  filter: brightness(1.1);
 }
 
 .window-button:active {
   filter: brightness(0.85);
+}
+
+.window-button:focus-visible {
+  outline: 2px solid #0a84ff;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(10, 132, 255, 0.2);
 }
 
 .window-button.close {

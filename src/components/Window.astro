@@ -19,41 +19,48 @@ const {
 >
   <div class="titlebar">
     <div class="window-buttons">
-      <div class="window-button close" data-action="close" aria-label="Close">
-        <svg viewBox="0 0 8 8">
+      <button
+        class="window-button close"
+        data-action="close"
+        type="button"
+        aria-label="Close window"
+      >
+        <svg viewBox="0 0 8 8" aria-hidden="true">
           <path
             d="M1 1 L7 7 M7 1 L1 7"
             stroke="#4d0000"
             stroke-width="1.4"
             stroke-linecap="round"></path>
         </svg>
-      </div>
-      <div
+      </button>
+      <button
         class="window-button minimize"
         data-action="minimize"
-        aria-label="Minimize"
+        type="button"
+        aria-label="Minimize window"
       >
-        <svg viewBox="0 0 8 8">
+        <svg viewBox="0 0 8 8" aria-hidden="true">
           <path
             d="M1 4 H7"
             stroke="#5a3e00"
             stroke-width="1.6"
             stroke-linecap="round"></path>
         </svg>
-      </div>
-      <div
+      </button>
+      <button
         class="window-button maximize"
         data-action="maximize"
-        aria-label="Maximize"
+        type="button"
+        aria-label="Maximize window"
       >
-        <svg viewBox="0 0 8 8">
+        <svg viewBox="0 0 8 8" aria-hidden="true">
           <path
             d="M1.2 1.2 H6.8 V6.8 H1.2 Z"
             stroke="#063d06"
             stroke-width="1.2"
             fill="none"></path>
         </svg>
-      </div>
+      </button>
     </div>
     <div class="title">{title}</div>
   </div>

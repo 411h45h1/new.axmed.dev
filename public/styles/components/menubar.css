@@ -30,15 +30,39 @@
   letter-spacing: 0.01em;
 }
 
+.skip-to-content {
+  position: absolute;
+  left: -9999px;
+  z-index: 999;
+  padding: 8px 16px;
+  background: #0a84ff;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.skip-to-content:focus {
+  left: 10px;
+  top: 10px;
+}
+
 #menubar .menu-item {
-  cursor: default;
+  all: unset;
+  cursor: pointer;
   position: relative;
   padding: 2px 6px;
   border-radius: 4px;
   transition: background var(--transition-fast);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  font-family: var(--font-stack);
 }
 
-#menubar .menu-item:hover {
+#menubar .menu-item:hover,
+#menubar .menu-item:focus-visible {
   background: rgba(255, 255, 255, 0.08);
 }
 

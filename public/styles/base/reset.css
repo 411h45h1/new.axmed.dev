@@ -23,6 +23,13 @@ body {
   border-radius: 4px;
 }
 
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid #0a84ff;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(10, 132, 255, 0.15);
+}
+
 .hidden {
   display: none !important;
 }

@@ -2,14 +2,40 @@
 // MenuBar Component
 ---
 
-<header id="menubar" role="menubar" aria-label="Desktop menu bar">
+<a href="#main-content" class="skip-to-content">Skip to main content</a>
+<header id="menubar" role="banner" aria-label="Desktop menu bar">
   <div class="left">
-    <span class="app-name" tabindex="0">Ahmed Ali</span>
-    <span class="menu-item" data-app="about" tabindex="0">About</span>
-    <span class="menu-item" data-app="experience" tabindex="0">Experience</span>
-    <span class="menu-item" data-app="projects" tabindex="0">Projects</span>
-    <span class="menu-item" data-app="skills" tabindex="0">Skills</span>
-    <span class="menu-item" data-app="contact" tabindex="0">Contact</span>
+    <span class="app-name">Ahmed Ali</span>
+    <button
+      class="menu-item"
+      data-app="about"
+      type="button"
+      aria-label="Open About section">About</button
+    >
+    <button
+      class="menu-item"
+      data-app="experience"
+      type="button"
+      aria-label="Open Experience section">Experience</button
+    >
+    <button
+      class="menu-item"
+      data-app="projects"
+      type="button"
+      aria-label="Open Projects section">Projects</button
+    >
+    <button
+      class="menu-item"
+      data-app="skills"
+      type="button"
+      aria-label="Open Skills section">Skills</button
+    >
+    <button
+      class="menu-item"
+      data-app="contact"
+      type="button"
+      aria-label="Open Contact section">Contact</button
+    >
   </div>
   <div class="right">
     <button

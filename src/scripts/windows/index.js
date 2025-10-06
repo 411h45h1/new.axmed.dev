@@ -115,14 +115,45 @@ export function initWindows() {
   if (!hasSavedState) {
     if (isMobile()) {
       wins.forEach((w) => {
-        w.classList.add("hidden");
+        const appId = w.dataset.app;
+        if (appId === "about") {
+          w.classList.remove("hidden");
+          focus(w);
+          const menubar = document.getElementById("menubar");
+          if (menubar) {
+            const title = w.querySelector(".title")?.textContent || "";
+            menubar.setAttribute("data-screen-title", title);
+          }
+        } else {
+          w.classList.add("hidden");
+        }
       });
       wins.forEach((w) => w.classList.remove("pre-center"));
       saveState(wins);
     } else {
-      const defaultWindows = isTablet()
-        ? ["about", "projects", "experience"]
-        : ["about", "projects", "experience", "skills", "contact"];
+      let defaultWindows;
+      const viewportWidth = window.innerWidth;
+
+      if (isTablet()) {
+        defaultWindows = ["about", "projects", "experience"];
+      } else if (viewportWidth >= 1440) {
+        defaultWindows = [
+          "about",
+          "projects",
+          "experience",
+          "skills",
+          "contact",
+        ];
+      } else {
+        defaultWindows = ["about", "projects", "skills", "contact"];
+      }
+
+      wins.forEach((w) => {
+        const initialStyle = w.getAttribute("style");
+        if (initialStyle && !w.getAttribute("data-original-style")) {
+          w.setAttribute("data-original-style", initialStyle);
+        }
+      });
 
       wins.forEach((w) => {
         const appId = w.dataset.app;
@@ -178,6 +209,29 @@ export function initWindows() {
           w.setAttribute("data-original-style", currentStyle);
         }
       });
+    } else {
+      const visibleWindow = wins.find((w) => !w.classList.contains("hidden"));
+      if (visibleWindow) {
+        const menubar = document.getElementById("menubar");
+        if (menubar) {
+          const title =
+            visibleWindow.querySelector(".title")?.textContent || "";
+          menubar.setAttribute("data-screen-title", title);
+        }
+      } else {
+        const aboutWindow = wins.find((w) => w.dataset.app === "about");
+        if (aboutWindow) {
+          aboutWindow.classList.remove("hidden");
+          focus(aboutWindow);
+          const menubar = document.getElementById("menubar");
+          if (menubar) {
+            const title =
+              aboutWindow.querySelector(".title")?.textContent || "";
+            menubar.setAttribute("data-screen-title", title);
+          }
+          saveState(wins);
+        }
+      }
     }
 
     const firstVisible = wins.find((w) => !w.classList.contains("hidden"));
@@ -210,6 +264,10 @@ export function initWindows() {
       });
       setTimeout(() => {
         document.dispatchEvent(new CustomEvent("windows:statechange"));
+
+        if (window.saveState) {
+          window.saveState(wins);
+        }
       }, 50);
       return;
     }
@@ -222,6 +280,10 @@ export function initWindows() {
       });
       setTimeout(() => {
         document.dispatchEvent(new CustomEvent("windows:statechange"));
+
+        if (window.saveState) {
+          window.saveState(wins);
+        }
       }, 50);
     }
   });
@@ -542,6 +604,8 @@ export function initWindows() {
   ["mouseup", "mouseleave"].forEach((ev) =>
     window.addEventListener(ev, () => saveState(wins))
   );
+
+  window.saveState = (windows) => saveState(windows || wins);
 
   return { focus, toggleMaximize, emitState };
 }

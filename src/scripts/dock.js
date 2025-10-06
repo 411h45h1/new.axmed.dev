@@ -62,6 +62,11 @@ export function initDock() {
           const title = w.querySelector(".title")?.textContent || "";
           menubar.setAttribute("data-screen-title", title);
         }
+
+        const wins = Array.from(document.querySelectorAll(".window"));
+        if (window.saveState) {
+          setTimeout(() => window.saveState(wins), 100);
+        }
       } else {
         const isHidden = w.classList.contains("hidden");
         const isMinimized = w.classList.contains("minimized");

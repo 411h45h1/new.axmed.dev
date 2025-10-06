@@ -414,6 +414,7 @@
 
     const RATE_LIMIT_KEY = "contact_form_last_submit";
     const RATE_LIMIT_MINUTES = 5;
+
     function canSubmit() {
       const lastSubmit = localStorage.getItem(RATE_LIMIT_KEY);
       if (!lastSubmit) return true;
@@ -426,41 +427,10 @@
       return minutesPassed >= RATE_LIMIT_MINUTES;
     }
 
-    function getRemainingTime() {
-      const lastSubmit = localStorage.getItem(RATE_LIMIT_KEY);
-      if (!lastSubmit) return 0;
-
-      const lastSubmitTime = parseInt(lastSubmit, 10);
-      const now = Date.now();
-      const timeDiff = now - lastSubmitTime;
-      const minutesPassed = Math.floor(timeDiff / 1000 / 60);
-
-      return Math.max(0, RATE_LIMIT_MINUTES - minutesPassed);
-    }
-
-    function updateButtonState() {
-      if (!canSubmit()) {
-        const remainingTime = getRemainingTime();
-        submitButton.disabled = true;
-        submitButton.textContent = `Wait ${remainingTime}min`;
-
-        setTimeout(updateButtonState, 60000);
-      } else {
-        submitButton.disabled = false;
-        submitButton.textContent = "Send Message";
-      }
-    }
-
-    updateButtonState();
-
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
       if (!canSubmit()) {
-        const remainingTime = getRemainingTime();
-        statusDiv.className = "form-status error";
-        statusDiv.textContent = `⏱ Please wait ${remainingTime} more minute${remainingTime > 1 ? "s" : ""} before submitting again.`;
-        statusDiv.style.display = "block";
         return;
       }
 
@@ -486,13 +456,26 @@
             "✓ Message sent successfully! I'll get back to you soon.";
           form.reset();
 
-          updateButtonState();
-
           setTimeout(() => {
             const successWindow = document.querySelector(
               '.window[data-app="success"]'
             );
             if (successWindow) {
+              const viewportWidth = window.innerWidth;
+              const viewportHeight = window.innerHeight;
+
+              const isMobileView = viewportWidth <= 767;
+              const windowWidth = isMobileView ? viewportWidth - 32 : 420;
+              const windowHeight = isMobileView ? 280 : 320;
+
+              const centerX = Math.max(16, (viewportWidth - windowWidth) / 2);
+              const centerY = Math.max(56, (viewportHeight - windowHeight) / 2);
+
+              successWindow.style.left = centerX + "px";
+              successWindow.style.top = centerY + "px";
+              successWindow.style.width = windowWidth + "px";
+              successWindow.style.height = windowHeight + "px";
+              successWindow.style.transform = "none";
               successWindow.classList.remove("hidden", "minimized");
 
               const allWindows = document.querySelectorAll(".window");

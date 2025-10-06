@@ -9,6 +9,7 @@ import ExperienceContent from "../components/windows/ExperienceContent.astro";
 import ProjectsContent from "../components/windows/ProjectsContent.astro";
 import SkillsContent from "../components/windows/SkillsContent.astro";
 import ContactContent from "../components/windows/ContactContent.astro";
+import SuccessContent from "../components/windows/SuccessContent.astro";
 ---
 
 <Layout>
@@ -19,7 +20,6 @@ import ContactContent from "../components/windows/ContactContent.astro";
 
     <Dock />
 
-    <!-- Windows -->
     <Window
       appId="about"
       title="About Me"
@@ -68,6 +68,16 @@ import ContactContent from "../components/windows/ContactContent.astro";
       hidden={true}
     >
       <ContactContent />
+    </Window>
+
+    <Window
+      appId="success"
+      title="Success"
+      initialStyle="left:50%; top:50%; transform:translate(-50%, -50%); width:420px; height:320px;"
+      ariaLabel="Message sent successfully"
+      hidden={true}
+    >
+      <SuccessContent />
     </Window>
   </main>
 

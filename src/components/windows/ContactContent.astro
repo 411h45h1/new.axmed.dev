@@ -497,6 +497,7 @@
         statusDiv.className = "form-status error";
         statusDiv.textContent =
           "✗ Something went wrong. Please try emailing me directly at ahmed@notso.io";
+      } finally {
         submitButton.disabled = false;
         submitButton.textContent = "Send Message";
       }

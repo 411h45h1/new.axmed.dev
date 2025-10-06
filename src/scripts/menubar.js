@@ -100,6 +100,11 @@
   function resetWindows() {
     const wins = document.querySelectorAll(".window");
 
+    const successWindow = document.querySelector('.window[data-app="success"]');
+    if (successWindow && !successWindow.classList.contains("hidden")) {
+      successWindow.classList.add("hidden");
+    }
+
     wins.forEach((win) => {
       const appId = win.dataset.app;
       const originalHtmlStyle = initialWindowStyles.get(appId);

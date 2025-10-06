@@ -405,7 +405,6 @@
 </div>
 
 <script is:inline>
-  // Handle form submission with better UX
   document.addEventListener("DOMContentLoaded", () => {
     const form = document.querySelector(".contact-form");
     const submitButton = form?.querySelector(".submit-button");
@@ -413,8 +412,57 @@
 
     if (!form || !submitButton || !statusDiv) return;
 
+    const RATE_LIMIT_KEY = "contact_form_last_submit";
+    const RATE_LIMIT_MINUTES = 5;
+    function canSubmit() {
+      const lastSubmit = localStorage.getItem(RATE_LIMIT_KEY);
+      if (!lastSubmit) return true;
+
+      const lastSubmitTime = parseInt(lastSubmit, 10);
+      const now = Date.now();
+      const timeDiff = now - lastSubmitTime;
+      const minutesPassed = Math.floor(timeDiff / 1000 / 60);
+
+      return minutesPassed >= RATE_LIMIT_MINUTES;
+    }
+
+    function getRemainingTime() {
+      const lastSubmit = localStorage.getItem(RATE_LIMIT_KEY);
+      if (!lastSubmit) return 0;
+
+      const lastSubmitTime = parseInt(lastSubmit, 10);
+      const now = Date.now();
+      const timeDiff = now - lastSubmitTime;
+      const minutesPassed = Math.floor(timeDiff / 1000 / 60);
+
+      return Math.max(0, RATE_LIMIT_MINUTES - minutesPassed);
+    }
+
+    function updateButtonState() {
+      if (!canSubmit()) {
+        const remainingTime = getRemainingTime();
+        submitButton.disabled = true;
+        submitButton.textContent = `Wait ${remainingTime}min`;
+
+        setTimeout(updateButtonState, 60000);
+      } else {
+        submitButton.disabled = false;
+        submitButton.textContent = "Send Message";
+      }
+    }
+
+    updateButtonState();
+
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
+
+      if (!canSubmit()) {
+        const remainingTime = getRemainingTime();
+        statusDiv.className = "form-status error";
+        statusDiv.textContent = `⏱ Please wait ${remainingTime} more minute${remainingTime > 1 ? "s" : ""} before submitting again.`;
+        statusDiv.style.display = "block";
+        return;
+      }
 
       submitButton.disabled = true;
       submitButton.textContent = "Sending...";
@@ -431,10 +479,14 @@
         });
 
         if (response.ok) {
+          localStorage.setItem(RATE_LIMIT_KEY, Date.now().toString());
+
           statusDiv.className = "form-status success";
           statusDiv.textContent =
             "✓ Message sent successfully! I'll get back to you soon.";
           form.reset();
+
+          updateButtonState();
 
           setTimeout(() => {
             const successWindow = document.querySelector(
@@ -462,7 +514,6 @@
         statusDiv.className = "form-status error";
         statusDiv.textContent =
           "✗ Something went wrong. Please try emailing me directly at ahmed@notso.io";
-      } finally {
         submitButton.disabled = false;
         submitButton.textContent = "Send Message";
       }

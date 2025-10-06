@@ -14,17 +14,21 @@ export function loadState(wins) {
       const { left, top, width, height, hidden, maximized } = data[appId];
 
       if (isMobile()) {
-        if (appId === "about") {
-          w.classList.remove("hidden");
-        } else {
+        if (hidden) {
           w.classList.add("hidden");
+        } else {
+          w.classList.remove("hidden");
         }
       } else {
         if (left != null) w.style.left = left + "px";
         if (top != null) w.style.top = top + "px";
         if (width != null) w.style.width = width + "px";
         if (height != null) w.style.height = height + "px";
-        if (hidden) w.classList.add("hidden");
+        if (hidden) {
+          w.classList.add("hidden");
+        } else {
+          w.classList.remove("hidden");
+        }
         if (maximized) w.classList.add("maximized");
       }
     });
@@ -33,7 +37,20 @@ export function loadState(wins) {
   }
 }
 
+export function readState() {
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch (_e) {
+    return null;
+  }
+}
+
 export function saveState(wins) {
+  if (typeof window !== "undefined" && window.__SUPPRESS_SAVE__) {
+    return;
+  }
   try {
     const data = {};
     wins.forEach((w) => {

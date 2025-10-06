@@ -6,18 +6,18 @@
   const resetBtn = document.getElementById("reset-windows-btn");
 
   const initialWindowStyles = new Map();
-  const initialVisibility = new Map(); // Track initial visibility state
+  const initialVisibility = new Map();
   let viewportChanged = false;
 
   function storeInitialStyles() {
     const wins = document.querySelectorAll(".window");
     wins.forEach((win) => {
-      const appId = win.dataset.app;
-      if (!initialWindowStyles.has(appId)) {
+      const _appId = win.dataset.app;
+      if (!initialWindowStyles.has(_appId)) {
         const initialStyle = win.getAttribute("style") || "";
         const isVisible = !win.classList.contains("hidden");
-        initialWindowStyles.set(appId, initialStyle);
-        initialVisibility.set(appId, isVisible);
+        initialWindowStyles.set(_appId, initialStyle);
+        initialVisibility.set(_appId, isVisible);
       }
     });
   }
@@ -49,7 +49,7 @@
     let visibilityChanged = false;
 
     for (const win of wins) {
-      const appId = win.dataset.app;
+      const _appId = win.dataset.app;
       const currentStyle = win.getAttribute("style") || "";
       const originalStyle = win.getAttribute("data-original-style") || "";
 
@@ -67,7 +67,6 @@
       }
     }
 
-    // Check if window visibility has changed from initial state
     if (initialVisibility.size > 0) {
       for (const win of wins) {
         const appId = win.dataset.app;
@@ -84,9 +83,9 @@
       }
     }
 
-    if (!allWindowsHaveOriginalStyle && !isModified && !visibilityChanged) {
-      resetBtn.classList.add("faded");
-      return false;
+    if (!allWindowsHaveOriginalStyle) {
+      resetBtn.classList.remove("faded");
+      return true;
     }
 
     if (isModified || viewportChanged || visibilityChanged) {
@@ -130,11 +129,30 @@
 
     viewportChanged = false;
 
-    // Update initial state after reset to reflect the new layout
     setTimeout(() => {
       initialWindowStyles.clear();
       initialVisibility.clear();
       storeInitialStyles();
+
+      const windowsToSave = Array.from(document.querySelectorAll(".window"));
+      const data = {};
+      windowsToSave.forEach((w) => {
+        const appId = w.dataset.app;
+        data[appId] = {
+          left: parseInt(w.style.left) || 0,
+          top: parseInt(w.style.top) || 0,
+          width: parseInt(w.style.width) || 420,
+          height: parseInt(w.style.height) || 280,
+          hidden: w.classList.contains("hidden"),
+          maximized: w.classList.contains("maximized"),
+        };
+      });
+      try {
+        localStorage.setItem("desktop:windowState:v1", JSON.stringify(data));
+      } catch (e) {
+        console.warn("Could not save window state after reset", e);
+      }
+
       checkWindowsModified();
     }, 150);
 

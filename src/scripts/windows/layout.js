@@ -181,7 +181,6 @@ export function createPreferredLayout(
       const rowHeight = Math.round(availableHeight * 0.9);
 
       if (colWidth >= MIN_W && rowHeight >= MIN_H) {
-        // Sort windows to ensure "about" is on the left
         const sortedWins = [...visibleWins].sort((a, b) => {
           if (a.dataset.app === "about") return -1;
           if (b.dataset.app === "about") return 1;
@@ -219,7 +218,6 @@ export function createPreferredLayout(
         bottomWidth >= MIN_W &&
         bottomHeight >= MIN_H
       ) {
-        // Sort windows to ensure "about" is in the top-left position
         const sortedWins = [...visibleWins].sort((a, b) => {
           if (a.dataset.app === "about") return -1;
           if (b.dataset.app === "about") return 1;
@@ -329,7 +327,6 @@ export function createPreferredLayout(
       const fullHeight = availableHeight;
 
       if (colWidth >= MIN_W && fullHeight >= MIN_H) {
-        // Sort windows to ensure "about" is on the left
         const sortedWins = [...visibleWins].sort((a, b) => {
           if (a.dataset.app === "about") return -1;
           if (b.dataset.app === "about") return 1;
@@ -472,7 +469,6 @@ export function createPreferredLayout(
         };
       }
     } else {
-      // Handle 5 windows: both projects and experience open - stack them in column 2
       if (aboutMe && projects && experience && skills && contact) {
         const col1Width = Math.round(availableWidth * 0.28);
         const col2Width = Math.round(availableWidth * 0.38);
@@ -537,7 +533,6 @@ export function createPreferredLayout(
           };
         }
       } else if (aboutMe && projects && skills && contact && !experience) {
-        // Handle 4 windows: aboutMe, projects, skills, contact (experience closed)
         const col1Width = Math.round(availableWidth * 0.33);
         const col2Width = Math.round(availableWidth * 0.33);
         const col3Width = availableWidth - col1Width - col2Width - GAP * 2;
@@ -591,7 +586,6 @@ export function createPreferredLayout(
           };
         }
       } else if (aboutMe && experience && skills && contact && !projects) {
-        // Handle 4 windows: aboutMe, experience, skills, contact (projects closed)
         const col1Width = Math.round(availableWidth * 0.33);
         const col2Width = Math.round(availableWidth * 0.33);
         const col3Width = availableWidth - col1Width - col2Width - GAP * 2;
@@ -653,7 +647,6 @@ export function createPreferredLayout(
         );
 
         if (colWidth >= MIN_W && rowHeight >= MIN_H) {
-          // Sort windows to ensure "about" is always on the left (first)
           const sortedWins = [...visibleWins].sort((a, b) => {
             if (a.dataset.app === "about") return -1;
             if (b.dataset.app === "about") return 1;

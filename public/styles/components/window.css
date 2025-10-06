@@ -13,11 +13,13 @@
 
   transition: left var(--transition-slow), top var(--transition-slow),
     width var(--transition-slow), height var(--transition-slow),
-    border-radius var(--transition-slow), box-shadow var(--transition-fast);
+    border-radius var(--transition-slow), box-shadow var(--transition-fast),
+    opacity var(--transition-fast), visibility 0s;
 }
 
 .window.pre-center {
   visibility: hidden;
+  opacity: 0;
 }
 
 .window.focused {

@@ -6,7 +6,7 @@ import {
   applyCenteredPositions,
   applySmartLayout,
 } from "./layout.js";
-import { loadState, saveState } from "./persistence.js";
+import { loadState, saveState, readState } from "./persistence.js";
 
 const STATE_EVENT = "windows:statechange";
 
@@ -45,13 +45,7 @@ export function initWindows() {
 
   if (isMobile()) {
     wins.forEach((w) => {
-      const appId = w.dataset.app;
-      if (appId === "about") {
-        w.classList.remove("hidden");
-        focus(w);
-      } else {
-        w.classList.add("hidden");
-      }
+      w.classList.add("hidden");
     });
   } else {
     const firstVisibleWindow = wins.find(
@@ -105,34 +99,97 @@ export function initWindows() {
   window.__ensureWindowsRespectMenubar = ensureWindowsRespectMenubar;
   window.__toggleMaximize = toggleMaximize;
 
-  const smartLayout = smartDistributeWindows(wins);
-  if (smartLayout) {
-    applySmartLayout(smartLayout);
-    wins.forEach((w) => {
-      const currentStyle = w.getAttribute("style");
-      if (currentStyle) {
-        w.setAttribute("data-original-style", currentStyle);
-      }
-    });
-  }
-
-  if (!smartLayout) {
-    const centeredPositions = calculateCenteredPositions(wins);
-    if (centeredPositions) {
-      applyCenteredPositions(centeredPositions);
-      centeredPositions.windowData.forEach(({ w }) => {
-        const currentStyle = w.getAttribute("style");
-        w.setAttribute("data-original-style", currentStyle);
+  const stateData = readState();
+  let hasSavedState = !!stateData;
+  if (!hasSavedState) {
+    try {
+      hasSavedState = !!localStorage.getItem("desktop:windowState:v1");
+    } catch (e) {
+      hasSavedState = wins.some((w) => {
+        const style = w.getAttribute("style") || "";
+        return style.includes("left") || style.includes("top");
       });
     }
   }
 
-  requestAnimationFrame(() => {
+  if (!hasSavedState) {
+    if (isMobile()) {
+      wins.forEach((w) => {
+        w.classList.add("hidden");
+      });
+      wins.forEach((w) => w.classList.remove("pre-center"));
+      saveState(wins);
+    } else {
+      const defaultWindows = isTablet()
+        ? ["about", "projects", "experience"]
+        : ["about", "projects", "experience", "skills", "contact"];
+
+      wins.forEach((w) => {
+        const appId = w.dataset.app;
+        if (defaultWindows.includes(appId)) {
+          w.classList.remove("hidden");
+        } else {
+          w.classList.add("hidden");
+        }
+      });
+
+      setTimeout(() => {
+        const layout = smartDistributeWindows(wins);
+        if (layout) {
+          applySmartLayout(layout);
+          wins.forEach((w) => {
+            const currentStyle = w.getAttribute("style");
+            if (currentStyle) {
+              w.setAttribute("data-original-style", currentStyle);
+            }
+          });
+        } else {
+          const centered = calculateCenteredPositions(wins);
+          if (centered) {
+            applyCenteredPositions(centered);
+            centered.windowData.forEach(({ w }) => {
+              const currentStyle = w.getAttribute("style");
+              if (currentStyle) {
+                w.setAttribute("data-original-style", currentStyle);
+              }
+            });
+          }
+        }
+
+        const firstVisible = wins.find((w) => !w.classList.contains("hidden"));
+        if (firstVisible) {
+          focus(firstVisible);
+        }
+
+        saveState(wins);
+        wins.forEach((w) => w.classList.remove("pre-center"));
+        setTimeout(() => {
+          document.dispatchEvent(new CustomEvent("windows:statechange"));
+        }, 50);
+      }, 220);
+    }
+  } else {
+    loadState(wins);
+
+    if (!isMobile()) {
+      wins.forEach((w) => {
+        const currentStyle = w.getAttribute("style");
+        if (currentStyle) {
+          w.setAttribute("data-original-style", currentStyle);
+        }
+      });
+    }
+
+    const firstVisible = wins.find((w) => !w.classList.contains("hidden"));
+    if (firstVisible) {
+      focus(firstVisible);
+    }
+
     wins.forEach((w) => w.classList.remove("pre-center"));
     setTimeout(() => {
       document.dispatchEvent(new CustomEvent("windows:statechange"));
     }, 50);
-  });
+  }
 
   if (hasViewportChanged()) {
     document.dispatchEvent(new CustomEvent("viewport:changed"));
@@ -416,6 +473,7 @@ export function initWindows() {
       switch (action) {
         case "close":
           win.classList.add("hidden");
+          saveState(wins);
           document.dispatchEvent(new CustomEvent("viewport:changed"));
           break;
         case "minimize":
@@ -446,25 +504,6 @@ export function initWindows() {
       if (focused) toggleMaximize(focused);
     }
   });
-
-  loadState(wins);
-
-  // Ensure at least one window is visible on mobile (preferably "about")
-  if (isMobile()) {
-    const visibleWindows = wins.filter((w) => !w.classList.contains("hidden"));
-    if (visibleWindows.length === 0) {
-      // No windows visible, show "about" by default
-      const aboutWindow = wins.find((w) => w.dataset.app === "about");
-      if (aboutWindow) {
-        aboutWindow.classList.remove("hidden");
-        focus(aboutWindow);
-      } else if (wins.length > 0) {
-        // Fallback: show the first window if "about" doesn't exist
-        wins[0].classList.remove("hidden");
-        focus(wins[0]);
-      }
-    }
-  }
 
   function playMinimize(win, done) {
     const app = win.dataset.app;

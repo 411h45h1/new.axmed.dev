@@ -6,7 +6,12 @@ import {
   applyCenteredPositions,
   applySmartLayout,
 } from "./layout.js";
-import { loadState, saveState, readState } from "./persistence.js";
+import {
+  loadState,
+  saveState,
+  readState,
+  hasViewportMismatch,
+} from "./persistence.js";
 
 const STATE_EVENT = "windows:statechange";
 
@@ -200,36 +205,121 @@ export function initWindows() {
       }, 220);
     }
   } else {
-    loadState(wins);
+    const viewportMismatch = hasViewportMismatch();
 
-    if (!isMobile()) {
-      wins.forEach((w) => {
-        const currentStyle = w.getAttribute("style");
-        if (currentStyle) {
-          w.setAttribute("data-original-style", currentStyle);
-        }
-      });
-    } else {
-      const visibleWindow = wins.find((w) => !w.classList.contains("hidden"));
-      if (visibleWindow) {
-        const menubar = document.getElementById("menubar");
-        if (menubar) {
-          const title =
-            visibleWindow.querySelector(".title")?.textContent || "";
-          menubar.setAttribute("data-screen-title", title);
-        }
+    if (viewportMismatch) {
+      if (isMobile()) {
+        wins.forEach((w) => {
+          const appId = w.dataset.app;
+          if (appId === "about") {
+            w.classList.remove("hidden");
+          } else {
+            w.classList.add("hidden");
+          }
+          w.style.removeProperty("left");
+          w.style.removeProperty("top");
+          w.style.removeProperty("width");
+          w.style.removeProperty("height");
+          w.classList.remove("maximized");
+        });
+        wins.forEach((w) => w.classList.remove("pre-center"));
+        saveState(wins);
       } else {
-        const aboutWindow = wins.find((w) => w.dataset.app === "about");
-        if (aboutWindow) {
-          aboutWindow.classList.remove("hidden");
-          focus(aboutWindow);
+        let defaultWindows;
+        const viewportWidth = window.innerWidth;
+
+        if (isTablet()) {
+          defaultWindows = ["about", "experience"];
+        } else if (viewportWidth >= 1440) {
+          defaultWindows = ["about", "experience", "projects"];
+        } else {
+          defaultWindows = ["about", "experience"];
+        }
+
+        wins.forEach((w) => {
+          const appId = w.dataset.app;
+          w.classList.remove("maximized");
+          if (defaultWindows.includes(appId)) {
+            w.classList.remove("hidden");
+          } else {
+            w.classList.add("hidden");
+          }
+        });
+
+        wins.forEach((w) => {
+          const currentStyle = w.getAttribute("style");
+          if (currentStyle) {
+            w.setAttribute("data-original-style", currentStyle);
+          }
+        });
+
+        setTimeout(() => {
+          const smart = smartDistributeWindows(wins);
+          if (smart) {
+            applySmartLayout(smart);
+            wins.forEach((w) => {
+              const currentStyle = w.getAttribute("style");
+              if (currentStyle) {
+                w.setAttribute("data-original-style", currentStyle);
+              }
+            });
+            wins.forEach((w) => w.classList.remove("pre-center"));
+            saveState(wins);
+            setTimeout(() => {
+              document.dispatchEvent(new CustomEvent("windows:statechange"));
+            }, 50);
+            return;
+          }
+
+          const newPositions = calculateCenteredPositions(wins);
+          if (newPositions) {
+            applyCenteredPositions(newPositions);
+            wins.forEach((w) => {
+              const currentStyle = w.getAttribute("style");
+              if (currentStyle) {
+                w.setAttribute("data-original-style", currentStyle);
+              }
+            });
+          }
+          wins.forEach((w) => w.classList.remove("pre-center"));
+          saveState(wins);
+          setTimeout(() => {
+            document.dispatchEvent(new CustomEvent("windows:statechange"));
+          }, 50);
+        }, 220);
+      }
+    } else {
+      loadState(wins);
+
+      if (!isMobile()) {
+        wins.forEach((w) => {
+          const currentStyle = w.getAttribute("style");
+          if (currentStyle) {
+            w.setAttribute("data-original-style", currentStyle);
+          }
+        });
+      } else {
+        const visibleWindow = wins.find((w) => !w.classList.contains("hidden"));
+        if (visibleWindow) {
           const menubar = document.getElementById("menubar");
           if (menubar) {
             const title =
-              aboutWindow.querySelector(".title")?.textContent || "";
+              visibleWindow.querySelector(".title")?.textContent || "";
             menubar.setAttribute("data-screen-title", title);
           }
-          saveState(wins);
+        } else {
+          const aboutWindow = wins.find((w) => w.dataset.app === "about");
+          if (aboutWindow) {
+            aboutWindow.classList.remove("hidden");
+            focus(aboutWindow);
+            const menubar = document.getElementById("menubar");
+            if (menubar) {
+              const title =
+                aboutWindow.querySelector(".title")?.textContent || "";
+              menubar.setAttribute("data-screen-title", title);
+            }
+            saveState(wins);
+          }
         }
       }
     }
@@ -244,7 +334,6 @@ export function initWindows() {
       document.dispatchEvent(new CustomEvent("windows:statechange"));
     }, 50);
   }
-
   if (hasViewportChanged()) {
     document.dispatchEvent(new CustomEvent("viewport:changed"));
   }

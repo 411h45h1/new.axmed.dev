@@ -8,10 +8,12 @@ export function loadState(wins) {
     if (!raw) return;
     const data = JSON.parse(raw);
 
+    const windowData = data.windows || data;
+
     wins.forEach((w) => {
       const appId = w.dataset.app;
-      if (!data[appId]) return;
-      const { left, top, width, height, hidden, maximized } = data[appId];
+      if (!windowData[appId]) return;
+      const { left, top, width, height, hidden, maximized } = windowData[appId];
 
       if (isMobile()) {
         if (hidden) {
@@ -47,15 +49,50 @@ export function readState() {
   }
 }
 
+export function hasViewportMismatch() {
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (!raw) return false;
+    const data = JSON.parse(raw);
+
+    if (!data.viewport) return true;
+
+    const { width: savedWidth, height: savedHeight } = data.viewport;
+    const currentWidth = window.innerWidth;
+    const currentHeight = window.innerHeight;
+
+    const widthDiff = Math.abs(currentWidth - savedWidth);
+    const heightDiff = Math.abs(currentHeight - savedHeight);
+
+    const savedAspectRatio = savedWidth / savedHeight;
+    const currentAspectRatio = currentWidth / currentHeight;
+
+    const aspectRatioDiff =
+      Math.abs(savedAspectRatio - currentAspectRatio) / savedAspectRatio;
+
+    return widthDiff > 100 || heightDiff > 100 || aspectRatioDiff > 0.2;
+  } catch (e) {
+    console.warn("Could not check viewport mismatch", e);
+    return false;
+  }
+}
+
 export function saveState(wins) {
   if (typeof window !== "undefined" && window.__SUPPRESS_SAVE__) {
     return;
   }
   try {
-    const data = {};
+    const data = {
+      viewport: {
+        width: window.innerWidth,
+        height: window.innerHeight,
+        timestamp: Date.now(),
+      },
+      windows: {},
+    };
     wins.forEach((w) => {
       const appId = w.dataset.app;
-      data[appId] = {
+      data.windows[appId] = {
         left: parseInt(w.style.left) || 0,
         top: parseInt(w.style.top) || 0,
         width: parseInt(w.style.width) || 420,

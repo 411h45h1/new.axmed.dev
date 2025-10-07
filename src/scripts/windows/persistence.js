@@ -70,7 +70,22 @@ export function hasViewportMismatch() {
     const aspectRatioDiff =
       Math.abs(savedAspectRatio - currentAspectRatio) / savedAspectRatio;
 
-    return widthDiff > 100 || heightDiff > 100 || aspectRatioDiff > 0.2;
+    const majorWidthChange = widthDiff > 300;
+    const majorHeightChange = heightDiff > 300;
+    const majorAspectRatioChange = aspectRatioDiff > 0.4;
+
+    const crossedMajorBreakpoint =
+      (savedWidth <= 768 && currentWidth > 1024) ||
+      (savedWidth > 1024 && currentWidth <= 768) ||
+      (savedWidth <= 1024 && currentWidth > 1440) ||
+      (savedWidth > 1440 && currentWidth <= 1024);
+
+    return (
+      majorWidthChange ||
+      majorHeightChange ||
+      majorAspectRatioChange ||
+      crossedMajorBreakpoint
+    );
   } catch (e) {
     console.warn("Could not check viewport mismatch", e);
     return false;

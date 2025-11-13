@@ -2,9 +2,9 @@
 // Dock Component
 const dockApps = [
   {
-    id: "about",
-    label: "About Me",
-    ariaLabel: "Open About Me",
+    id: 'about',
+    label: 'About Me',
+    ariaLabel: 'Open About Me',
     icon: `
       <rect x="8" y="8" width="48" height="48" rx="8" fill="#ffcc02" />
       <rect x="16" y="20" width="32" height="4" rx="2" fill="#333" />
@@ -13,9 +13,9 @@ const dockApps = [
     `,
   },
   {
-    id: "experience",
-    label: "Experience",
-    ariaLabel: "Open Experience",
+    id: 'experience',
+    label: 'Experience',
+    ariaLabel: 'Open Experience',
     icon: `
       <rect x="8" y="8" width="48" height="48" rx="10" fill="#e67e22" />
       <rect x="16" y="28" width="32" height="20" rx="2" fill="white" />
@@ -24,18 +24,18 @@ const dockApps = [
     `,
   },
   {
-    id: "projects",
-    label: "Projects",
-    ariaLabel: "Open Projects",
+    id: 'projects',
+    label: 'Projects',
+    ariaLabel: 'Open Projects',
     icon: `
       <rect x="8" y="8" width="48" height="48" rx="10" fill="#0a84ff" />
       <path fill-rule="evenodd" clip-rule="evenodd" d="M14 18C14 16.8954 14.8954 16 16 16H30C31.1046 16 32 16.8954 32 18V20H48V42C48 43.1046 47.1046 44 46 44H18C16.8954 44 16 43.1046 16 42V38H14V18ZM18 38V42H46V22H32V20H18V38Z" fill="white"/>
     `,
   },
   {
-    id: "skills",
-    label: "Skills",
-    ariaLabel: "Open Skills",
+    id: 'skills',
+    label: 'Skills',
+    ariaLabel: 'Open Skills',
     icon: `
       <rect x="8" y="8" width="48" height="48" rx="10" fill="#1e1e1e" />
       <path stroke="#39ff14" stroke-width="4" stroke-linecap="round" d="M20 24 L30 32 L20 40" />
@@ -43,31 +43,41 @@ const dockApps = [
     `,
   },
   {
-    id: "contact",
-    label: "Contact",
-    ariaLabel: "Open Contact",
+    id: 'contact',
+    label: 'Contact',
+    ariaLabel: 'Open Contact',
     icon: `
       <rect x="8" y="8" width="48" height="48" rx="10" fill="#8e44ad" />
       <path d="M16 20H48V38H16L16 20Z" fill="white" />
       <path d="M16 20L32 32L48 20" stroke="#8e44ad" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" fill="none" />
     `,
   },
+  {
+    id: 'video-player',
+    label: 'Video Player',
+    ariaLabel: 'Open Video Player',
+    icon: `
+      <rect x="8" y="8" width="48" height="48" rx="10" fill="#e74c3c" />
+      <rect x="16" y="20" width="32" height="24" rx="4" fill="white" />
+      <path d="M28 26 L38 32 L28 38 Z" fill="#e74c3c" />
+    `,
+  },
 ];
 ---
 
-<div id="dock-wrapper" aria-label="Application Dock">
-  <nav id="dock" role="navigation">
+<div id='dock-wrapper' aria-label='Application Dock'>
+  <nav id='dock' role='navigation'>
     {
       dockApps.map((app) => (
         <button
-          class="dock-item"
+          class='dock-item'
           data-app={app.id}
           aria-label={app.ariaLabel}
-          tabindex="0"
+          tabindex='0'
         >
-          <svg viewBox="0 0 64 64" aria-hidden="true" set:html={app.icon} />
-          <span class="dock-label">{app.label}</span>
-          <div class="dock-indicator" />
+          <svg viewBox='0 0 64 64' aria-hidden='true' set:html={app.icon} />
+          <span class='dock-label'>{app.label}</span>
+          <div class='dock-indicator' />
         </button>
       ))
     }
@@ -75,5 +85,5 @@ const dockApps = [
 </div>
 
 <script>
-  import "../scripts/dock.js";
+  import '../scripts/dock.js';
 </script>

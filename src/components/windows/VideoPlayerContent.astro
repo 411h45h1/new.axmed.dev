@@ -1,0 +1,173 @@
+---
+// Video Player Window Content
+---
+
+<div class='video-container'>
+  <video
+    id='demo-video'
+    controls
+    preload='metadata'
+    aria-label='PowerLv demo video'
+  >
+    <source src='/videos/plv_screencap_0.7.3.mp4' type='video/mp4' />
+    Your browser does not support the video tag.
+  </video>
+</div>
+
+<div class='video-info'>
+  <h4 id='video-title'>PowerLv Demo</h4>
+  <p id='video-description'>
+    Watch PowerLv in action - a social fitness app with real-time feeds and
+    competitive leaderboards.
+  </p>
+</div>
+
+<script>
+  // Auto-resize video player window based on video dimensions
+  function resizeVideoPlayerWindow() {
+    const video = document.getElementById('demo-video') as HTMLVideoElement;
+    const videoWindow = document.querySelector(
+      '.window[data-app="video-player"]'
+    ) as HTMLElement;
+
+    if (!video || !videoWindow) return;
+
+    video.addEventListener('loadedmetadata', () => {
+      const videoWidth = video.videoWidth;
+      const videoHeight = video.videoHeight;
+
+      if (videoWidth === 0 || videoHeight === 0) return;
+
+      // Skip auto-resize on mobile - let responsive CSS handle it
+      if (window.innerWidth <= 767) {
+        return;
+      }
+
+      // Calculate optimal window size for desktop/tablet
+      const maxWidth = Math.min(window.innerWidth * 0.85, 900);
+      const maxHeight = Math.min(window.innerHeight * 0.75, 650);
+
+      // Calculate aspect ratio
+      const aspectRatio = videoWidth / videoHeight;
+
+      // Calculate scaled video dimensions maintaining aspect ratio
+      let scaledWidth = videoWidth;
+      let scaledHeight = videoHeight;
+
+      // Scale to fit within max constraints
+      if (scaledWidth > maxWidth || scaledHeight > maxHeight) {
+        if (scaledWidth / maxWidth > scaledHeight / maxHeight) {
+          // Width is the limiting factor
+          scaledWidth = maxWidth;
+          scaledHeight = scaledWidth / aspectRatio;
+        } else {
+          // Height is the limiting factor
+          scaledHeight = maxHeight;
+          scaledWidth = scaledHeight * aspectRatio;
+        }
+      }
+
+      // Account for window chrome (titlebar ~28px, video-info ~60px)
+      const chromeHeight = 88;
+      const windowWidth = Math.round(Math.max(scaledWidth, 450));
+      const windowHeight = Math.round(
+        Math.max(scaledHeight + chromeHeight, 300)
+      );
+
+      // Update window size
+      videoWindow.style.width = `${windowWidth}px`;
+      videoWindow.style.height = `${windowHeight}px`;
+
+      // Center window if it's newly opened
+      if (videoWindow.classList.contains('hidden') === false) {
+        const centerX = (window.innerWidth - windowWidth) / 2;
+        const centerY = (window.innerHeight - windowHeight) / 2;
+
+        videoWindow.style.left = `${Math.max(centerX, 20)}px`;
+        videoWindow.style.top = `${Math.max(centerY, 50)}px`;
+      }
+
+      // Trigger window system update
+      if ((window as any).saveState) {
+        const allWindows = Array.from(document.querySelectorAll('.window'));
+        (window as any).saveState(allWindows);
+      }
+    });
+  }
+
+  // Initialize on DOM ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', resizeVideoPlayerWindow);
+  } else {
+    resizeVideoPlayerWindow();
+  }
+</script>
+
+<style>
+  .video-container {
+    position: relative;
+    width: 100%;
+    flex: 1 1 auto;
+    min-height: 0;
+    background: #000;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #demo-video {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: contain;
+  }
+
+  .video-info {
+    padding: 12px;
+    flex-shrink: 0;
+    background: rgba(28, 28, 30, 0.6);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .video-info h4 {
+    margin: 0 0 6px 0;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  .video-info p {
+    margin: 0;
+    color: #b3b3b3;
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  /* Ensure window content uses flexbox properly */
+  :global(.window[data-app='video-player'] .window-content) {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  /* Mobile responsive */
+  @media (max-width: 767px) {
+    .video-info {
+      padding: 10px;
+    }
+
+    .video-info h4 {
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .video-info p {
+      font-size: 12px;
+    }
+  }
+</style>

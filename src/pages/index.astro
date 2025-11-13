@@ -1,19 +1,20 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import Wallpaper from "../components/Wallpaper.astro";
-import MenuBar from "../components/MenuBar.astro";
-import Dock from "../components/Dock.astro";
-import Window from "../components/Window.astro";
-import AboutContent from "../components/windows/AboutContent.astro";
-import ExperienceContent from "../components/windows/ExperienceContent.astro";
-import ProjectsContent from "../components/windows/ProjectsContent.astro";
-import SkillsContent from "../components/windows/SkillsContent.astro";
-import ContactContent from "../components/windows/ContactContent.astro";
-import SuccessContent from "../components/windows/SuccessContent.astro";
+import Layout from '../layouts/Layout.astro';
+import Wallpaper from '../components/Wallpaper.astro';
+import MenuBar from '../components/MenuBar.astro';
+import Dock from '../components/Dock.astro';
+import Window from '../components/Window.astro';
+import AboutContent from '../components/windows/AboutContent.astro';
+import ExperienceContent from '../components/windows/ExperienceContent.astro';
+import ProjectsContent from '../components/windows/ProjectsContent.astro';
+import SkillsContent from '../components/windows/SkillsContent.astro';
+import ContactContent from '../components/windows/ContactContent.astro';
+import SuccessContent from '../components/windows/SuccessContent.astro';
+import VideoPlayerContent from '../components/windows/VideoPlayerContent.astro';
 ---
 
 <Layout>
-  <main id="main-content" role="main">
+  <main id='main-content' role='main'>
     <Wallpaper />
 
     <MenuBar />
@@ -21,68 +22,78 @@ import SuccessContent from "../components/windows/SuccessContent.astro";
     <Dock />
 
     <Window
-      appId="about"
-      title="About Me"
-      initialStyle="left:160px; top:120px; width:420px; height:280px;"
-      ariaLabel="About Me window"
+      appId='about'
+      title='About Me'
+      initialStyle='left:160px; top:120px; width:420px; height:280px;'
+      ariaLabel='About Me window'
       hidden={true}
     >
       <AboutContent />
     </Window>
 
     <Window
-      appId="experience"
-      title="Experience"
-      initialStyle="left:240px; top:200px; width:520px; height:400px;"
-      ariaLabel="Experience window"
+      appId='experience'
+      title='Experience'
+      initialStyle='left:240px; top:200px; width:520px; height:400px;'
+      ariaLabel='Experience window'
       hidden={true}
     >
       <ExperienceContent />
     </Window>
 
     <Window
-      appId="projects"
-      title="Projects"
-      initialStyle="left:620px; top:140px;"
-      ariaLabel="Projects window"
+      appId='projects'
+      title='Projects'
+      initialStyle='left:620px; top:140px;'
+      ariaLabel='Projects window'
       hidden={true}
     >
       <ProjectsContent />
     </Window>
 
     <Window
-      appId="skills"
-      title="Skills & Tech Stack"
-      initialStyle="left:340px; top:430px; width:560px; height:240px;"
-      ariaLabel="Skills window"
+      appId='skills'
+      title='Skills & Tech Stack'
+      initialStyle='left:340px; top:430px; width:560px; height:240px;'
+      ariaLabel='Skills window'
       hidden={true}
     >
       <SkillsContent />
     </Window>
 
     <Window
-      appId="contact"
-      title="Contact"
-      initialStyle="left:940px; top:260px; width:360px; height:220px;"
-      ariaLabel="Contact window"
+      appId='contact'
+      title='Contact'
+      initialStyle='left:940px; top:260px; width:360px; height:220px;'
+      ariaLabel='Contact window'
       hidden={true}
     >
       <ContactContent />
     </Window>
 
     <Window
-      appId="success"
-      title="Success"
-      initialStyle="width:420px; height:320px;"
-      ariaLabel="Message sent successfully"
+      appId='success'
+      title='Success'
+      initialStyle='width:420px; height:320px;'
+      ariaLabel='Message sent successfully'
       hidden={true}
     >
       <SuccessContent />
     </Window>
+
+    <Window
+      appId='video-player'
+      title='Video Player'
+      initialStyle='left:300px; top:150px; width:600px; height:450px;'
+      ariaLabel='Video Player window'
+      hidden={true}
+    >
+      <VideoPlayerContent />
+    </Window>
   </main>
 
   <script>
-    import "../scripts/windows/index.js";
-    import "../scripts/main.js";
+    import '../scripts/windows/index.js';
+    import '../scripts/main.js';
   </script>
 </Layout>

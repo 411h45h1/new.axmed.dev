@@ -1,22 +1,22 @@
-import { isMobile } from "./windows/responsive.js";
+import { isMobile } from './windows/responsive.js';
 
 export function initDock() {
-  const dock = document.getElementById("dock");
+  const dock = document.getElementById('dock');
   if (!dock) return;
-  const items = Array.from(dock.querySelectorAll(".dock-item"));
+  const items = Array.from(dock.querySelectorAll('.dock-item'));
   const maxScale = 1.85;
   const influence = 140;
 
   function initMagnification() {
     if (isMobile()) {
-      dock.removeEventListener("mousemove", handleMouseMove);
-      dock.removeEventListener("mouseleave", handleMouseLeave);
-      items.forEach((i) => (i.style.transform = ""));
+      dock.removeEventListener('mousemove', handleMouseMove);
+      dock.removeEventListener('mouseleave', handleMouseLeave);
+      items.forEach((i) => (i.style.transform = ''));
       return;
     }
 
-    dock.addEventListener("mousemove", handleMouseMove);
-    dock.addEventListener("mouseleave", handleMouseLeave);
+    dock.addEventListener('mousemove', handleMouseMove);
+    dock.addEventListener('mouseleave', handleMouseLeave);
   }
 
   function handleMouseMove(e) {
@@ -36,52 +36,52 @@ export function initDock() {
   }
 
   function handleMouseLeave() {
-    items.forEach((i) => (i.style.transform = ""));
+    items.forEach((i) => (i.style.transform = ''));
   }
 
   initMagnification();
 
   items.forEach((di) => {
-    di.addEventListener("click", () => {
+    di.addEventListener('click', () => {
       const app = di.dataset.app;
       const w = document.querySelector(`.window[data-app="${app}"]`);
       if (!w) return;
 
       if (isMobile()) {
-        const allWindows = document.querySelectorAll(".window");
+        const allWindows = document.querySelectorAll('.window');
         allWindows.forEach((win) => {
           if (win !== w) {
-            win.classList.add("hidden");
+            win.classList.add('hidden');
           }
         });
-        w.classList.remove("hidden", "minimized");
+        w.classList.remove('hidden', 'minimized');
         focus(w);
 
-        const menubar = document.getElementById("menubar");
+        const menubar = document.getElementById('menubar');
         if (menubar) {
-          const title = w.querySelector(".title")?.textContent || "";
-          menubar.setAttribute("data-screen-title", title);
+          const title = w.querySelector('.title')?.textContent || '';
+          menubar.setAttribute('data-screen-title', title);
         }
 
-        const wins = Array.from(document.querySelectorAll(".window"));
+        const wins = Array.from(document.querySelectorAll('.window'));
         if (window.saveState) {
           setTimeout(() => window.saveState(wins), 100);
         }
       } else {
-        const isHidden = w.classList.contains("hidden");
-        const isMinimized = w.classList.contains("minimized");
-        const isFocused = w.classList.contains("focused");
-        const isMaximized = w.classList.contains("maximized");
+        const isHidden = w.classList.contains('hidden');
+        const isMinimized = w.classList.contains('minimized');
+        const isFocused = w.classList.contains('focused');
+        const isMaximized = w.classList.contains('maximized');
 
         if (isHidden) {
-          w.classList.remove("hidden", "minimized");
+          w.classList.remove('hidden', 'minimized');
           focus(w);
           if (window.__ensureWindowsRespectMenubar) {
             setTimeout(() => window.__ensureWindowsRespectMenubar(), 0);
           }
         } else if (isMinimized) {
-          w.classList.remove("minimized");
-          w.style.removeProperty("transform");
+          w.classList.remove('minimized');
+          w.style.removeProperty('transform');
           focus(w);
         } else if (isFocused && !isMaximized) {
           if (window.__toggleMaximize) {
@@ -99,21 +99,27 @@ export function initDock() {
     });
   });
   function focus(win) {
-    win.dispatchEvent(new Event("click", { bubbles: true }));
+    win.dispatchEvent(new Event('click', { bubbles: true }));
   }
   function syncIndicators() {
     items.forEach((di) => {
       const app = di.dataset.app;
       const w = document.querySelector(`.window[data-app="${app}"]`);
-      di.classList.toggle("active", !!w && !w.classList.contains("hidden"));
+      const isOpen = !!w && !w.classList.contains('hidden');
+      di.classList.toggle('active', isOpen);
+
+      // Hide video player dock icon when window is closed
+      if (app === 'video-player') {
+        di.style.display = isOpen ? 'flex' : 'none';
+      }
     });
   }
-  document.addEventListener("windows:statechange", syncIndicators);
+  document.addEventListener('windows:statechange', syncIndicators);
   syncIndicators();
 
   items.forEach((item) => {
-    item.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") {
+    item.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
         item.click();
       }
@@ -121,7 +127,7 @@ export function initDock() {
   });
 
   let resizeTimer;
-  window.addEventListener("resize", () => {
+  window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(() => {
       initMagnification();

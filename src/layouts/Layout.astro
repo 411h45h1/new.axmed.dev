@@ -60,10 +60,12 @@ const siteUrl = "https://axmed.dev";
     <link rel="manifest" href="/site.webmanifest" />
 
     <!-- Preconnect for Performance -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
 
     <!-- Stylesheet -->
     <link rel="stylesheet" href="/styles/main.css" />
+    <link rel="preload" href="/styles/main.css" as="style" />
 
     <!-- Structured Data (JSON-LD) -->
     <script

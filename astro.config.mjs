@@ -5,12 +5,23 @@ export default defineConfig({
   output: "static",
   build: {
     inlineStylesheets: "auto",
+    assets: "_astro",
   },
   devToolbar: { enabled: false },
+  compressHTML: true,
   vite: {
     build: {
       cssMinify: true,
-      minify: true,
+      minify: "esbuild",
+      rollupOptions: {
+        output: {
+          manualChunks: undefined,
+        },
+      },
+    },
+    esbuild: {
+      drop: ["console", "debugger"],
+      legalComments: "none",
     },
   },
 });

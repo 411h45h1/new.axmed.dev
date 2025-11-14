@@ -15,7 +15,7 @@ test.describe("Responsive Design Tests", () => {
       expect(dockBox).toBeTruthy();
 
       // Dock should be near bottom of screen
-      expect(dockBox!.y).toBeGreaterThan(900);
+      expect(dockBox?.y).toBeGreaterThan(900);
     });
 
     test("should enable window dragging on desktop", async ({ page, isMobile }) => {
@@ -46,7 +46,7 @@ test.describe("Responsive Design Tests", () => {
       const newBox = await aboutWindow.boundingBox();
 
       // Position should have changed (on desktop)
-      expect(newBox!.x).not.toBe(initialBox!.x);
+      expect(newBox?.x).not.toBe(initialBox?.x);
     });
 
     test("should show dock magnification effect on hover", async ({ page }) => {
@@ -117,7 +117,7 @@ test.describe("Responsive Design Tests", () => {
       const viewportWidth = page.viewportSize()?.width || 0;
 
       // Window should fit within viewport
-      expect(windowBox!.width).toBeLessThanOrEqual(viewportWidth);
+      expect(windowBox?.width).toBeLessThanOrEqual(viewportWidth);
     });
   });
 
@@ -145,7 +145,7 @@ test.describe("Responsive Design Tests", () => {
       // Window should be visible and sized for mobile
       const windowBox = await aboutWindow.boundingBox();
       expect(windowBox).toBeTruthy();
-      expect(windowBox!.width).toBeGreaterThan(100);
+      expect(windowBox?.width).toBeGreaterThan(100);
     });
 
     test("should disable drag on mobile", async ({ page }) => {
@@ -274,7 +274,7 @@ test.describe("Responsive Design Tests", () => {
       await page.keyboard.press("Tab");
       await page.waitForTimeout(200);
 
-      const firstMenuItem = page.locator('.menu-item[data-app="about"]');
+      const _firstMenuItem = page.locator('.menu-item[data-app="about"]');
 
       // Activate with Enter
       await page.keyboard.press("Enter");
@@ -372,7 +372,7 @@ test.describe("Responsive Design Tests", () => {
       await expect(aboutWindow).toBeVisible();
 
       const windowBox = await aboutWindow.boundingBox();
-      expect(windowBox!.width).toBeLessThanOrEqual(375);
+      expect(windowBox?.width).toBeLessThanOrEqual(375);
     });
 
     test("should persist window state across viewport changes", async ({ page }) => {

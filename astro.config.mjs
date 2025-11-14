@@ -17,6 +17,16 @@ export default defineConfig({
         output: {
           manualChunks: undefined,
         },
+        onwarn(warning, warn) {
+          // Suppress unused import warnings from Astro internals
+          if (
+            warning.code === "UNUSED_EXTERNAL_IMPORT" &&
+            warning.exporter?.includes("@astrojs/internal-helpers")
+          ) {
+            return;
+          }
+          warn(warning);
+        },
       },
     },
     esbuild: {

@@ -14,13 +14,9 @@ test.describe("Performance Tests", () => {
     const response = await page.goto("/");
     expect(response?.status()).toBe(200);
 
-    // Check HTML is compressed
-    const contentEncoding = response?.headers()["content-encoding"];
-    // In production, this would be gzip or br
-
     // Verify no unnecessary large payloads
     const htmlSize = (await response?.body())?.length || 0;
-    console.log(`HTML size: ${htmlSize} bytes`);
+    console.warn(`HTML size: ${htmlSize} bytes`);
   });
 
   test("should lazy load or optimize JavaScript bundles", async ({ page }) => {
@@ -32,7 +28,7 @@ test.describe("Performance Tests", () => {
     await page.waitForLoadState("networkidle");
 
     const totalTime = Date.now() - startTime;
-    console.log(`Total load time with network idle: ${totalTime}ms`);
+    console.warn(`Total load time with network idle: ${totalTime}ms`);
 
     // Should be reasonably fast even with all assets
     expect(totalTime).toBeLessThan(5000);
@@ -165,7 +161,7 @@ test.describe("Performance Tests", () => {
       });
     });
 
-    console.log(`LCP: ${lcp}ms`);
+    console.warn(`LCP: ${lcp}ms`);
 
     // LCP should be under 2.5 seconds for good performance
     if (lcp > 0) {
@@ -207,7 +203,7 @@ test.describe("Performance Tests", () => {
     // The window should be positioned correctly without layout shifts
     const boundingBox = await aboutWindow.boundingBox();
     expect(boundingBox).toBeTruthy();
-    expect(boundingBox!.width).toBeGreaterThan(0);
-    expect(boundingBox!.height).toBeGreaterThan(0);
+    expect(boundingBox?.width).toBeGreaterThan(0);
+    expect(boundingBox?.height).toBeGreaterThan(0);
   });
 });

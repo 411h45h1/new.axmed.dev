@@ -27,9 +27,7 @@
     left: 8px !important;
     top: calc(var(--menubar-height) + 8px) !important;
     width: calc(100vw - 16px) !important;
-    height: calc(
-      100vh - var(--menubar-height) - var(--dock-height) - 24px
-    ) !important;
+    height: calc(100vh - var(--menubar-height) - var(--dock-height) - 24px) !important;
     border-radius: 10px !important;
   }
 

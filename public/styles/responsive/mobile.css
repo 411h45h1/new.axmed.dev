@@ -182,9 +182,7 @@
     top: var(--menubar-height) !important;
     width: 100% !important;
     height: calc(100vh - var(--menubar-height) - var(--dock-height)) !important;
-    height: calc(
-      100dvh - var(--menubar-height) - var(--dock-height)
-    ) !important;
+    height: calc(100dvh - var(--menubar-height) - var(--dock-height)) !important;
     border-radius: 0 !important;
     border-left: none;
     border-right: none;
@@ -211,9 +209,7 @@
     top: var(--menubar-height) !important;
     width: 100% !important;
     height: calc(100vh - var(--menubar-height) - var(--dock-height)) !important;
-    height: calc(
-      100dvh - var(--menubar-height) - var(--dock-height)
-    ) !important;
+    height: calc(100dvh - var(--menubar-height) - var(--dock-height)) !important;
   }
 
   .titlebar {

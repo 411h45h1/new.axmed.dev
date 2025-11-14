@@ -1,25 +1,16 @@
 import { isMobile, isTablet } from "./responsive.js";
 
-export function calculateCenteredPositions(wins) {
+export function calculateCenteredPositions(wins: HTMLElement[]) {
   const mobile = isMobile();
-  const _tablet = isTablet();
 
   if (mobile) {
     return null;
   }
 
   const menubarHeight =
-    parseInt(
-      getComputedStyle(document.documentElement).getPropertyValue(
-        "--menubar-height"
-      )
-    ) || 28;
+    parseInt(getComputedStyle(document.documentElement).getPropertyValue("--menubar-height")) || 28;
   const dockHeight =
-    parseInt(
-      getComputedStyle(document.documentElement).getPropertyValue(
-        "--dock-height"
-      )
-    ) || 84;
+    parseInt(getComputedStyle(document.documentElement).getPropertyValue("--dock-height")) || 84;
 
   const availableWidth = window.innerWidth;
   const availableHeight = window.innerHeight - menubarHeight - dockHeight;
@@ -29,7 +20,14 @@ export function calculateCenteredPositions(wins) {
   let maxX = -Infinity,
     maxY = -Infinity;
 
-  const windowData = [];
+  const windowData: Array<{
+    w: HTMLElement;
+    left: number;
+    top: number;
+    width: number;
+    height: number;
+    originalStyle: string;
+  }> = [];
 
   const sortedWins = [...wins].sort((a, b) => {
     if (a.dataset.app === "about") return -1;
@@ -38,8 +36,7 @@ export function calculateCenteredPositions(wins) {
   });
 
   sortedWins.forEach((w) => {
-    const originalStyle =
-      w.getAttribute("data-original-style") || w.getAttribute("style");
+    const originalStyle = w.getAttribute("data-original-style") || w.getAttribute("style");
 
     if (!originalStyle) {
       return;
@@ -76,10 +73,7 @@ export function calculateCenteredPositions(wins) {
   const MIN_SCALE = 0.55;
 
   let scale = 1;
-  if (
-    groupWidth + MARGIN * 2 > availableWidth ||
-    groupHeight + MARGIN * 2 > availableHeight
-  ) {
+  if (groupWidth + MARGIN * 2 > availableWidth || groupHeight + MARGIN * 2 > availableHeight) {
     const scaleX = (availableWidth - MARGIN * 2) / groupWidth;
     const scaleY = (availableHeight - MARGIN * 2) / groupHeight;
     scale = Math.min(scaleX, scaleY, 1);
@@ -92,28 +86,29 @@ export function calculateCenteredPositions(wins) {
   const scaledHeight = groupHeight * scale;
 
   let offsetX = (availableWidth - scaledWidth) / 2 - minX * scale;
-  let offsetY =
-    (availableHeight - scaledHeight) / 2 + menubarHeight - minY * scale;
+  let offsetY = (availableHeight - scaledHeight) / 2 + menubarHeight - minY * scale;
 
   const minOffsetX = MARGIN - minX * scale;
-  const maxOffsetX =
-    availableWidth - MARGIN - (minX + groupWidth) * scale + minX * scale;
+  const maxOffsetX = availableWidth - MARGIN - (minX + groupWidth) * scale + minX * scale;
   if (offsetX < minOffsetX) offsetX = minOffsetX;
   if (offsetX > maxOffsetX) offsetX = maxOffsetX;
 
   const topMargin = menubarHeight + MARGIN;
   const minOffsetY = topMargin - minY * scale;
   const maxOffsetY =
-    menubarHeight +
-    availableHeight -
-    MARGIN -
-    (minY + groupHeight) * scale +
-    minY * scale;
+    menubarHeight + availableHeight - MARGIN - (minY + groupHeight) * scale + minY * scale;
   if (offsetY < minOffsetY) offsetY = minOffsetY;
   if (offsetY > maxOffsetY) offsetY = maxOffsetY;
 
   return {
-    windowData,
+    windowData: windowData as Array<{
+      w: HTMLElement;
+      left: number;
+      top: number;
+      width: number;
+      height: number;
+      originalStyle: string;
+    }>,
     offsetX,
     offsetY,
     menubarHeight,
@@ -123,12 +118,12 @@ export function calculateCenteredPositions(wins) {
 }
 
 export function createPreferredLayout(
-  visibleWins,
-  availableWidth,
-  availableHeight,
-  menubarHeight,
-  MARGIN,
-  GAP
+  visibleWins: HTMLElement[],
+  availableWidth: number,
+  availableHeight: number,
+  menubarHeight: number,
+  MARGIN: number,
+  GAP: number
 ) {
   const MIN_W = 220;
   const MIN_H = 140;
@@ -140,9 +135,10 @@ export function createPreferredLayout(
   const tablet = isTablet();
   const windowCount = visibleWins.length;
 
-  const windowMap = {};
+  const windowMap: Record<string, HTMLElement> = {};
   visibleWins.forEach((w) => {
-    windowMap[w.dataset.app] = w;
+    const appId = w.dataset.app;
+    if (appId) windowMap[appId] = w;
   });
 
   const aboutMe = windowMap["about"];
@@ -187,7 +183,14 @@ export function createPreferredLayout(
           return 0;
         });
 
-        const entries = [];
+        const entries: Array<{
+          w: HTMLElement;
+          left: number;
+          top: number;
+          width: number;
+          height: number;
+          priority: number;
+        }> = [];
         sortedWins.forEach((w, idx) => {
           entries.push({
             w: w,
@@ -263,7 +266,7 @@ export function createPreferredLayout(
       const rowHeight = Math.round((availableHeight - GAP) / 2);
 
       if (colWidth >= MIN_W && rowHeight >= MIN_H) {
-        const orderedWindows = [];
+        const orderedWindows: HTMLElement[] = [];
         if (aboutMe) orderedWindows.push(aboutMe);
         if (projects) orderedWindows.push(projects);
         if (skills) orderedWindows.push(skills);
@@ -275,7 +278,14 @@ export function createPreferredLayout(
           }
         });
 
-        const entries = [];
+        const entries: Array<{
+          w: HTMLElement;
+          left: number;
+          top: number;
+          width: number;
+          height: number;
+          priority: number;
+        }> = [];
         orderedWindows.slice(0, 4).forEach((w, idx) => {
           const row = Math.floor(idx / 2);
           const col = idx % 2;
@@ -333,7 +343,14 @@ export function createPreferredLayout(
           return 0;
         });
 
-        const entries = [];
+        const entries: Array<{
+          w: HTMLElement;
+          left: number;
+          top: number;
+          width: number;
+          height: number;
+          priority: number;
+        }> = [];
         sortedWins.forEach((w, idx) => {
           entries.push({
             w: w,
@@ -358,13 +375,9 @@ export function createPreferredLayout(
       const halfHeight = Math.round((availableHeight - GAP) / 2);
       const fullHeight = availableHeight;
 
-      if (
-        leftColWidth >= MIN_W &&
-        rightColWidth >= MIN_W &&
-        halfHeight >= MIN_H
-      ) {
-        const priorityWindows = [];
-        const otherWindows = [];
+      if (leftColWidth >= MIN_W && rightColWidth >= MIN_W && halfHeight >= MIN_H) {
+        const priorityWindows: HTMLElement[] = [];
+        const otherWindows: HTMLElement[] = [];
 
         visibleWins.forEach((w) => {
           if (w.dataset.app === "about") {
@@ -378,24 +391,15 @@ export function createPreferredLayout(
 
         const orderedWindows = [...priorityWindows, ...otherWindows];
 
-        const hasProjects = visibleWins.some(
-          (w) => w.dataset.app === "projects"
-        );
-        const hasExperience = visibleWins.some(
-          (w) => w.dataset.app === "experience"
-        );
+        const hasProjects = visibleWins.some((w) => w.dataset.app === "projects");
+        const hasExperience = visibleWins.some((w) => w.dataset.app === "experience");
 
         if (hasProjects && hasExperience) {
           const thirdWindow = visibleWins.find(
-            (w) =>
-              w.dataset.app !== "projects" && w.dataset.app !== "experience"
+            (w) => w.dataset.app !== "projects" && w.dataset.app !== "experience"
           );
-          const projectsWindow = visibleWins.find(
-            (w) => w.dataset.app === "projects"
-          );
-          const experienceWindow = visibleWins.find(
-            (w) => w.dataset.app === "experience"
-          );
+          const projectsWindow = visibleWins.find((w) => w.dataset.app === "projects");
+          const experienceWindow = visibleWins.find((w) => w.dataset.app === "experience");
 
           if (thirdWindow && projectsWindow && experienceWindow) {
             const entries = [
@@ -539,12 +543,7 @@ export function createPreferredLayout(
         const fullHeight = availableHeight;
         const halfHeight = Math.round((fullHeight - GAP) / 2);
 
-        if (
-          col1Width >= MIN_W &&
-          col2Width >= MIN_W &&
-          col3Width >= MIN_W &&
-          halfHeight >= MIN_H
-        ) {
+        if (col1Width >= MIN_W && col2Width >= MIN_W && col3Width >= MIN_W && halfHeight >= MIN_H) {
           return {
             type: "preferred",
             entries: [
@@ -592,12 +591,7 @@ export function createPreferredLayout(
         const fullHeight = availableHeight;
         const halfHeight = Math.round((fullHeight - GAP) / 2);
 
-        if (
-          col1Width >= MIN_W &&
-          col2Width >= MIN_W &&
-          col3Width >= MIN_W &&
-          halfHeight >= MIN_H
-        ) {
+        if (col1Width >= MIN_W && col2Width >= MIN_W && col3Width >= MIN_W && halfHeight >= MIN_H) {
           return {
             type: "preferred",
             entries: [
@@ -642,9 +636,7 @@ export function createPreferredLayout(
         const cols = windowCount <= 4 ? 2 : 3;
         const rows = Math.ceil(windowCount / cols);
         const colWidth = Math.round((availableWidth - GAP * (cols - 1)) / cols);
-        const rowHeight = Math.round(
-          (availableHeight - GAP * (rows - 1)) / rows
-        );
+        const rowHeight = Math.round((availableHeight - GAP * (rows - 1)) / rows);
 
         if (colWidth >= MIN_W && rowHeight >= MIN_H) {
           const sortedWins = [...visibleWins].sort((a, b) => {
@@ -653,7 +645,14 @@ export function createPreferredLayout(
             return 0;
           });
 
-          const entries = [];
+          const entries: Array<{
+            w: HTMLElement;
+            left: number;
+            top: number;
+            width: number;
+            height: number;
+            priority: number;
+          }> = [];
           sortedWins.forEach((w, idx) => {
             const row = Math.floor(idx / cols);
             const col = idx % cols;
@@ -681,31 +680,23 @@ export function createPreferredLayout(
   return null;
 }
 
-export function smartDistributeWindows(wins) {
+export function smartDistributeWindows(wins: HTMLElement[]) {
   const mobile = isMobile();
   if (mobile) {
     return null;
   }
 
   const visibleWins = wins.filter(
-    (w) => !w.classList.contains("hidden") && !w.classList.contains("maximized")
+    (w: HTMLElement) => !w.classList.contains("hidden") && !w.classList.contains("maximized")
   );
   if (!visibleWins.length) {
     return null;
   }
 
   const menubarHeight =
-    parseInt(
-      getComputedStyle(document.documentElement).getPropertyValue(
-        "--menubar-height"
-      )
-    ) || 28;
+    parseInt(getComputedStyle(document.documentElement).getPropertyValue("--menubar-height")) || 28;
   const dockHeight =
-    parseInt(
-      getComputedStyle(document.documentElement).getPropertyValue(
-        "--dock-height"
-      )
-    ) || 84;
+    parseInt(getComputedStyle(document.documentElement).getPropertyValue("--dock-height")) || 84;
 
   const MARGIN = 24;
   const GAP = 24;
@@ -713,8 +704,7 @@ export function smartDistributeWindows(wins) {
   const MIN_H = 140;
 
   const availableWidth = window.innerWidth - MARGIN * 2;
-  const availableHeight =
-    window.innerHeight - menubarHeight - dockHeight - MARGIN * 2;
+  const availableHeight = window.innerHeight - menubarHeight - dockHeight - MARGIN * 2;
 
   if (availableWidth < MIN_W || availableHeight < MIN_H) {
     return null;
@@ -732,7 +722,7 @@ export function smartDistributeWindows(wins) {
     return preferredLayout;
   }
 
-  const getWindowPriority = (w) => {
+  const getWindowPriority = (w: HTMLElement) => {
     const appId = w.dataset.app;
     switch (appId) {
       case "about":
@@ -747,7 +737,7 @@ export function smartDistributeWindows(wins) {
     }
   };
 
-  const getPositionOrder = (w) => {
+  const getPositionOrder = (w: HTMLElement) => {
     const appId = w.dataset.app;
     switch (appId) {
       case "about":
@@ -765,17 +755,12 @@ export function smartDistributeWindows(wins) {
     }
   };
 
-  const meta = visibleWins.map((w) => {
-    const style =
-      w.getAttribute("data-original-style") || w.getAttribute("style") || "";
+  const meta = visibleWins.map((w: HTMLElement) => {
+    const style = w.getAttribute("data-original-style") || w.getAttribute("style") || "";
     const widthMatch = style.match(/width:\s*(\d+)px/);
     const heightMatch = style.match(/height:\s*(\d+)px/);
-    let width = widthMatch
-      ? parseInt(widthMatch[1])
-      : Math.round(w.offsetWidth) || 420;
-    let height = heightMatch
-      ? parseInt(heightMatch[1])
-      : Math.round(w.offsetHeight) || 280;
+    let width = widthMatch ? parseInt(widthMatch[1]) : Math.round(w.offsetWidth) || 420;
+    let height = heightMatch ? parseInt(heightMatch[1]) : Math.round(w.offsetHeight) || 280;
     width = Math.max(width, MIN_W);
     height = Math.max(height, MIN_H);
     const aspect = width / height;
@@ -792,13 +777,20 @@ export function smartDistributeWindows(wins) {
     };
   });
 
-  meta.sort((a, b) => {
+  meta.sort((a: (typeof meta)[0], b: (typeof meta)[0]) => {
     return a.positionOrder - b.positionOrder;
   });
 
-  const totalBaseArea = meta.reduce((s, m) => s + m.baseArea, 0);
+  const totalBaseArea = meta.reduce((s: number, m: (typeof meta)[0]) => s + m.baseArea, 0);
 
-  let best = null;
+  let best: {
+    cols: number;
+    rows: number;
+    cellWidth: number;
+    cellHeight: number;
+    wastedRatio: number;
+    layoutEntries: any[];
+  } | null = null;
   const maxCols = Math.min(meta.length, 6);
   for (let cols = 1; cols <= maxCols; cols++) {
     const rows = Math.ceil(meta.length / cols);
@@ -809,8 +801,15 @@ export function smartDistributeWindows(wins) {
     }
 
     let usedArea = 0;
-    const layoutEntries = [];
-    meta.forEach((m, idx) => {
+    const layoutEntries: Array<{
+      w: any;
+      left: number;
+      top: number;
+      width: number;
+      height: number;
+      priority: any;
+    }> = [];
+    meta.forEach((m: (typeof meta)[0], idx: number) => {
       const priorityMultiplier = m.priority === 1 ? 1.5 : 0.75;
       const areaShare = (m.baseArea / totalBaseArea) * priorityMultiplier;
       const targetArea = areaShare * (cols * rows * cellWidth * cellHeight);
@@ -829,11 +828,7 @@ export function smartDistributeWindows(wins) {
         }
       }
 
-      const scaleDown = Math.min(
-        cellWidth / targetWidth,
-        cellHeight / targetHeight,
-        1
-      );
+      const scaleDown = Math.min(cellWidth / targetWidth, cellHeight / targetHeight, 1);
       targetWidth *= scaleDown;
       targetHeight *= scaleDown;
 
@@ -846,13 +841,9 @@ export function smartDistributeWindows(wins) {
 
       const row = Math.floor(idx / cols);
       const col = idx % cols;
-      const left =
-        MARGIN + col * (cellWidth + GAP) + (cellWidth - targetWidth) / 2;
+      const left = MARGIN + col * (cellWidth + GAP) + (cellWidth - targetWidth) / 2;
       const top =
-        menubarHeight +
-        MARGIN +
-        row * (cellHeight + GAP) +
-        (cellHeight - targetHeight) / 2;
+        menubarHeight + MARGIN + row * (cellHeight + GAP) + (cellHeight - targetHeight) / 2;
       layoutEntries.push({
         w: m.w,
 
@@ -893,7 +884,7 @@ export function smartDistributeWindows(wins) {
   };
 }
 
-export function applyCenteredPositions(positionData) {
+export function applyCenteredPositions(positionData: any) {
   if (!positionData) {
     return;
   }
@@ -903,17 +894,9 @@ export function applyCenteredPositions(positionData) {
   const viewportW = window.innerWidth;
   const viewportH = window.innerHeight;
   const menubarHeight =
-    parseInt(
-      getComputedStyle(document.documentElement).getPropertyValue(
-        "--menubar-height"
-      )
-    ) || 28;
+    parseInt(getComputedStyle(document.documentElement).getPropertyValue("--menubar-height")) || 28;
   const dockHeight =
-    parseInt(
-      getComputedStyle(document.documentElement).getPropertyValue(
-        "--dock-height"
-      )
-    ) || 84;
+    parseInt(getComputedStyle(document.documentElement).getPropertyValue("--dock-height")) || 84;
   const usableBottom = viewportH - dockHeight - margin;
   const topSafe = menubarHeight + margin;
 
@@ -942,15 +925,9 @@ export function applyCenteredPositions(positionData) {
     const finalWidth = Math.max(newWidth, MIN_W);
     const finalHeight = Math.max(newHeight, MIN_H);
 
-    const clampedLeft = Math.min(
-      Math.max(newLeft, margin),
-      viewportW - margin - finalWidth
-    );
+    const clampedLeft = Math.min(Math.max(newLeft, margin), viewportW - margin - finalWidth);
 
-    const clampedTop = Math.min(
-      Math.max(newTop, topSafe),
-      usableBottom - finalHeight
-    );
+    const clampedTop = Math.min(Math.max(newTop, topSafe), usableBottom - finalHeight);
 
     let newStyle = `left: ${clampedLeft}px; top: ${clampedTop}px;`;
     newStyle += ` width: ${finalWidth}px;`;
@@ -959,12 +936,12 @@ export function applyCenteredPositions(positionData) {
   });
 }
 
-export function applySmartLayout(layout) {
+export function applySmartLayout(layout: any) {
   if (!layout || (layout.type !== "grid" && layout.type !== "preferred")) {
     return;
   }
 
-  layout.entries.forEach((entry) => {
+  layout.entries.forEach((entry: any) => {
     const { w, left, top, width, height } = entry;
     const style = `left: ${left}px; top: ${top}px; width: ${width}px; height: ${height}px;`;
     w.setAttribute("style", style);

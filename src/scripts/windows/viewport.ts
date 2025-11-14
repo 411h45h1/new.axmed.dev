@@ -16,10 +16,7 @@ export function hasViewportChanged() {
     const { width, height } = JSON.parse(stored);
     const current = getViewportDimensions();
 
-    return (
-      Math.abs(current.width - width) > 50 ||
-      Math.abs(current.height - height) > 50
-    );
+    return Math.abs(current.width - width) > 50 || Math.abs(current.height - height) > 50;
   } catch (e) {
     return false;
   }

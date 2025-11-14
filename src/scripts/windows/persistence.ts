@@ -2,7 +2,7 @@ import { isMobile } from "./responsive.js";
 
 const LS_KEY = "desktop:windowState:v1";
 
-export function loadState(wins) {
+export function loadState(wins: HTMLElement[]) {
   try {
     const raw = localStorage.getItem(LS_KEY);
     if (!raw) return;
@@ -12,7 +12,7 @@ export function loadState(wins) {
 
     wins.forEach((w) => {
       const appId = w.dataset.app;
-      if (!windowData[appId]) return;
+      if (!appId || !windowData[appId]) return;
       const { left, top, width, height, hidden, maximized } = windowData[appId];
 
       if (isMobile()) {
@@ -67,8 +67,7 @@ export function hasViewportMismatch() {
     const savedAspectRatio = savedWidth / savedHeight;
     const currentAspectRatio = currentWidth / currentHeight;
 
-    const aspectRatioDiff =
-      Math.abs(savedAspectRatio - currentAspectRatio) / savedAspectRatio;
+    const aspectRatioDiff = Math.abs(savedAspectRatio - currentAspectRatio) / savedAspectRatio;
 
     const majorWidthChange = widthDiff > 300;
     const majorHeightChange = heightDiff > 300;
@@ -81,10 +80,7 @@ export function hasViewportMismatch() {
       (savedWidth > 1440 && currentWidth <= 1024);
 
     return (
-      majorWidthChange ||
-      majorHeightChange ||
-      majorAspectRatioChange ||
-      crossedMajorBreakpoint
+      majorWidthChange || majorHeightChange || majorAspectRatioChange || crossedMajorBreakpoint
     );
   } catch (e) {
     console.warn("Could not check viewport mismatch", e);
@@ -92,7 +88,7 @@ export function hasViewportMismatch() {
   }
 }
 
-export function saveState(wins) {
+export function saveState(wins: HTMLElement[]) {
   if (typeof window !== "undefined" && window.__SUPPRESS_SAVE__) {
     return;
   }
@@ -107,6 +103,7 @@ export function saveState(wins) {
     };
     wins.forEach((w) => {
       const appId = w.dataset.app;
+      if (!appId) return;
       data.windows[appId] = {
         left: parseInt(w.style.left) || 0,
         top: parseInt(w.style.top) || 0,

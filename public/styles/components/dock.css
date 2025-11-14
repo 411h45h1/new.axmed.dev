@@ -21,7 +21,8 @@
   backdrop-filter: blur(var(--blur-strength)) saturate(200%);
   background: rgba(30, 30, 32, 0.72);
   border: 1px solid rgba(255, 255, 255, 0.16);
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.55),
+  box-shadow:
+    0 6px 24px rgba(0, 0, 0, 0.55),
     0 0 0 0.5px rgba(255, 255, 255, 0.08) inset;
   pointer-events: auto;
 }
@@ -34,7 +35,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 120ms ease, margin 120ms ease,
+  transition:
+    transform 120ms ease,
+    margin 120ms ease,
     box-shadow var(--transition-fast);
   will-change: transform;
   cursor: pointer;

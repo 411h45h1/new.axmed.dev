@@ -1,0 +1,393 @@
+19:07:17 [content] Syncing content
+19:07:17 [content] Synced content
+19:07:17 [types] Generated 46ms
+19:07:17 [check] Getting diagnostics for Astro files in C:\Users\ahmed\Desktop\workspace\new.axmed.dev...
+[96msrc/scripts/menubar.ts[0m:[93m311[0m:[93m20[0m - [91merror[0m[90m ts(2339): [0mProperty 'focus' does not exist on type 'Element'.
+
+[7m311[0m           content?.focus?.();
+[7m   [0m [91m                   ~~~~~[0m
+[96msrc/scripts/menubar.ts[0m:[93m308[0m:[93m36[0m - [91merror[0m[90m ts(2339): [0mProperty 'dataset' does not exist on type 'Element'.
+
+[7m308[0m         const win = getWindow(item.dataset.app);
+[7m   [0m [91m                                   ~~~~~~~[0m
+[96msrc/scripts/menubar.ts[0m:[93m307[0m:[93m13[0m - [91merror[0m[90m ts(2339): [0mProperty 'key' does not exist on type 'Event'.
+
+[7m307[0m       if (e.key === "ArrowDown") {
+[7m   [0m [91m            ~~~[0m
+[96msrc/scripts/menubar.ts[0m:[93m305[0m:[93m14[0m - [91merror[0m[90m ts(2339): [0mProperty 'click' does not exist on type 'Element'.
+
+[7m305[0m         item.click();
+[7m   [0m [91m             ~~~~~[0m
+[96msrc/scripts/menubar.ts[0m:[93m303[0m:[93m34[0m - [91merror[0m[90m ts(2339): [0mProperty 'key' does not exist on type 'Event'.
+
+[7m303[0m       if (e.key === "Enter" || e.key === " ") {
+[7m   [0m [91m                                 ~~~[0m
+[96msrc/scripts/menubar.ts[0m:[93m303[0m:[93m13[0m - [91merror[0m[90m ts(2339): [0mProperty 'key' does not exist on type 'Event'.
+
+[7m303[0m       if (e.key === "Enter" || e.key === " ") {
+[7m   [0m [91m            ~~~[0m
+[96msrc/scripts/menubar.ts[0m:[93m294[0m:[93m28[0m - [91merror[0m[90m ts(2722): [0mCannot invoke an object which is possibly 'undefined'.
+
+[7m294[0m           setTimeout(() => window.__ensureWindowsRespectMenubar(), 0);
+[7m   [0m [91m                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/scripts/menubar.ts[0m:[93m262[0m:[93m24[0m - [91merror[0m[90m ts(2339): [0mProperty 'dataset' does not exist on type 'Element'.
+
+[7m262[0m       const app = item.dataset.app;
+[7m   [0m [91m                       ~~~~~~~[0m
+[96msrc/scripts/menubar.ts[0m:[93m233[0m:[93m25[0m - [91merror[0m[90m ts(2345): [0mArgument of type 'EventTarget | null' is not assignable to parameter of type 'Node | null'.
+  Type 'EventTarget' is missing the following properties from type 'Node': baseURI, childNodes, firstChild, isConnected, and 43 more.
+
+[7m233[0m           !bar.contains(e.target)
+[7m   [0m [91m                        ~~~~~~~~[0m
+[96msrc/scripts/menubar.ts[0m:[93m233[0m:[93m12[0m - [91merror[0m[90m ts(18047): [0m'bar' is possibly 'null'.
+
+[7m233[0m           !bar.contains(e.target)
+[7m   [0m [91m           ~~~[0m
+[96msrc/scripts/menubar.ts[0m:[93m213[0m:[93m22[0m - [91merror[0m[90m ts(18047): [0m'bar' is possibly 'null'.
+
+[7m213[0m         const rect = bar.getBoundingClientRect();
+[7m   [0m [91m                     ~~~[0m
+[96msrc/scripts/menubar.ts[0m:[93m212[0m:[93m7[0m - [91merror[0m[90m ts(18047): [0m'bar' is possibly 'null'.
+
+[7m212[0m       bar.addEventListener("click", (e) => {
+[7m   [0m [91m      ~~~[0m
+[96msrc/scripts/menubar.ts[0m:[93m150[0m:[93m30[0m - [91merror[0m[90m ts(2339): [0mProperty 'style' does not exist on type 'Element'.
+
+[7m150[0m           height: parseInt(w.style.height) || 280,
+[7m   [0m [91m                             ~~~~~[0m
+[96msrc/scripts/menubar.ts[0m:[93m149[0m:[93m29[0m - [91merror[0m[90m ts(2339): [0mProperty 'style' does not exist on type 'Element'.
+
+[7m149[0m           width: parseInt(w.style.width) || 420,
+[7m   [0m [91m                            ~~~~~[0m
+[96msrc/scripts/menubar.ts[0m:[93m148[0m:[93m27[0m - [91merror[0m[90m ts(2339): [0mProperty 'style' does not exist on type 'Element'.
+
+[7m148[0m           top: parseInt(w.style.top) || 0,
+[7m   [0m [91m                          ~~~~~[0m
+[96msrc/scripts/menubar.ts[0m:[93m147[0m:[93m28[0m - [91merror[0m[90m ts(2339): [0mProperty 'style' does not exist on type 'Element'.
+
+[7m147[0m           left: parseInt(w.style.left) || 0,
+[7m   [0m [91m                           ~~~~~[0m
+[96msrc/scripts/menubar.ts[0m:[93m145[0m:[93m25[0m - [91merror[0m[90m ts(2339): [0mProperty 'dataset' does not exist on type 'Element'.
+
+[7m145[0m         const appId = w.dataset.app;
+[7m   [0m [91m                        ~~~~~~~[0m
+[96msrc/scripts/menubar.ts[0m:[93m109[0m:[93m25[0m - [91merror[0m[90m ts(2339): [0mProperty 'dataset' does not exist on type 'Element'.
+
+[7m109[0m       const appId = win.dataset.app;
+[7m   [0m [91m                        ~~~~~~~[0m
+[96msrc/scripts/menubar.ts[0m:[93m72[0m:[93m27[0m - [91merror[0m[90m ts(2339): [0mProperty 'dataset' does not exist on type 'Element'.
+
+[7m72[0m         const appId = win.dataset.app;
+[7m  [0m [91m                          ~~~~~~~[0m
+[96msrc/scripts/menubar.ts[0m:[93m52[0m:[93m26[0m - [91merror[0m[90m ts(2339): [0mProperty 'dataset' does not exist on type 'Element'.
+
+[7m52[0m       const _appId = win.dataset.app;
+[7m  [0m [91m                         ~~~~~~~[0m
+[96msrc/scripts/menubar.ts[0m:[93m15[0m:[93m26[0m - [91merror[0m[90m ts(2339): [0mProperty 'dataset' does not exist on type 'Element'.
+
+[7m15[0m       const _appId = win.dataset.app;
+[7m  [0m [91m                         ~~~~~~~[0m
+[96msrc/scripts/menubar.ts[0m:[93m329[0m:[93m7[0m - [93mwarning[0m[90m ts(7043): [0mVariable 'resizeTimer' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m329[0m   let resizeTimer;
+[7m   [0m [93m      ~~~~~~~~~~~[0m
+[96msrc/scripts/menubar.ts[0m:[93m253[0m:[93m28[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'win' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m253[0m   function restoreIfHidden(win) {
+[7m   [0m [93m                           ~~~[0m
+[96msrc/scripts/menubar.ts[0m:[93m248[0m:[93m27[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'win' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m248[0m   function maximizeWindow(win) {
+[7m   [0m [93m                          ~~~[0m
+[96msrc/scripts/menubar.ts[0m:[93m244[0m:[93m24[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'win' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m244[0m   function focusWindow(win) {
+[7m   [0m [93m                       ~~~[0m
+[96msrc/scripts/menubar.ts[0m:[93m241[0m:[93m22[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'app' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m241[0m   function getWindow(app) {
+[7m   [0m [93m                     ~~~[0m
+[96msrc/scripts/menubar.ts[0m:[93m52[0m:[93m13[0m - [93mwarning[0m[90m ts(6133): [0m'_appId' is declared but its value is never read.
+
+[7m52[0m       const _appId = win.dataset.app;
+[7m  [0m [93m            ~~~~~~[0m
+[96msrc/scripts/menubar.ts[0m:[93m33[0m:[93m27[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'style' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m33[0m   function normalizeStyle(style) {
+[7m  [0m [93m                          ~~~~~[0m
+
+[96msrc/scripts/windows/index.ts[0m:[93m368[0m:[93m11[0m - [91merror[0m[90m ts(2339): [0mProperty 'setAttribute' does not exist on type 'never'.
+
+[7m368[0m         w.setAttribute("data-original-style", currentStyle);
+[7m   [0m [91m          ~~~~~~~~~~~~[0m
+[96msrc/scripts/windows/index.ts[0m:[93m367[0m:[93m32[0m - [91merror[0m[90m ts(2339): [0mProperty 'getAttribute' does not exist on type 'never'.
+
+[7m367[0m         const currentStyle = w.getAttribute("style");
+[7m   [0m [91m                               ~~~~~~~~~~~~[0m
+[96msrc/scripts/windows/index.ts[0m:[93m189[0m:[93m19[0m - [91merror[0m[90m ts(2339): [0mProperty 'setAttribute' does not exist on type 'never'.
+
+[7m189[0m                 w.setAttribute("data-original-style", currentStyle);
+[7m   [0m [91m                  ~~~~~~~~~~~~[0m
+[96msrc/scripts/windows/index.ts[0m:[93m187[0m:[93m38[0m - [91merror[0m[90m ts(2339): [0mProperty 'getAttribute' does not exist on type 'never'.
+
+[7m187[0m               const currentStyle = w.getAttribute("style");
+[7m   [0m [91m                                     ~~~~~~~~~~~~[0m
+[96msrc/scripts/windows/index.ts[0m:[93m228[0m:[93m13[0m - [93mwarning[0m[90m ts(7043): [0mVariable 'defaultWindows' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m228[0m         let defaultWindows;
+[7m   [0m [93m            ~~~~~~~~~~~~~~[0m
+[96msrc/scripts/windows/index.ts[0m:[93m139[0m:[93m11[0m - [93mwarning[0m[90m ts(7043): [0mVariable 'defaultWindows' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m139[0m       let defaultWindows;
+[7m   [0m [93m          ~~~~~~~~~~~~~~[0m
+
+[96msrc/scripts/windows/layout.ts[0m:[93m889[0m:[93m19[0m - [91merror[0m[90m ts(2339): [0mProperty 'layoutEntries' does not exist on type 'never'.
+
+[7m889[0m     entries: best.layoutEntries,
+[7m   [0m [91m                  ~~~~~~~~~~~~~[0m
+[96msrc/scripts/windows/layout.ts[0m:[93m872[0m:[93m7[0m - [91merror[0m[90m ts(2322): [0mType '{ cols: number; rows: number; cellWidth: number; cellHeight: number; wastedRatio: number; layoutEntries: never[]; }' is not assignable to type 'null'.
+
+[7m872[0m       best = {
+[7m   [0m [91m      ~~~~[0m
+[96msrc/scripts/windows/layout.ts[0m:[93m871[0m:[93m37[0m - [91merror[0m[90m ts(2339): [0mProperty 'wastedRatio' does not exist on type 'never'.
+
+[7m871[0m     if (!best || wastedRatio < best.wastedRatio) {
+[7m   [0m [91m                                    ~~~~~~~~~~~[0m
+[96msrc/scripts/windows/layout.ts[0m:[93m856[0m:[93m26[0m - [91merror[0m[90m ts(2345): [0mArgument of type '{ w: any; left: number; top: number; width: number; height: number; priority: any; }' is not assignable to parameter of type 'never'.
+
+[7m856[0m       layoutEntries.push({
+[7m   [0m [91m                         ~[0m
+[7m857[0m         w: m.w,
+[7m   [0m [91m~~~~~~~~~~~~~~~[0m
+[7m...[0m 
+[7m863[0m         priority: m.priority,
+[7m   [0m [91m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[7m864[0m       });
+[7m   [0m [91m~~~~~~~[0m
+[96msrc/scripts/windows/layout.ts[0m:[93m660[0m:[93m26[0m - [91merror[0m[90m ts(2345): [0mArgument of type '{ w: any; left: any; top: any; width: number; height: number; priority: number; }' is not assignable to parameter of type 'never'.
+
+[7m660[0m             entries.push({
+[7m   [0m [91m                         ~[0m
+[7m661[0m               w: w,
+[7m   [0m [91m~~~~~~~~~~~~~~~~~~~[0m
+[7m...[0m 
+[7m666[0m               priority: 1,
+[7m   [0m [91m~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[7m667[0m             });
+[7m   [0m [91m~~~~~~~~~~~~~[0m
+[96msrc/scripts/windows/layout.ts[0m:[93m375[0m:[93m31[0m - [91merror[0m[90m ts(2345): [0mArgument of type 'any' is not assignable to parameter of type 'never'.
+
+[7m375[0m             otherWindows.push(w);
+[7m   [0m [91m                              ~[0m
+[96msrc/scripts/windows/layout.ts[0m:[93m373[0m:[93m34[0m - [91merror[0m[90m ts(2345): [0mArgument of type 'any' is not assignable to parameter of type 'never'.
+
+[7m373[0m             priorityWindows.push(w);
+[7m   [0m [91m                                 ~[0m
+[96msrc/scripts/windows/layout.ts[0m:[93m371[0m:[93m37[0m - [91merror[0m[90m ts(2345): [0mArgument of type 'any' is not assignable to parameter of type 'never'.
+
+[7m371[0m             priorityWindows.unshift(w);
+[7m   [0m [91m                                    ~[0m
+[96msrc/scripts/windows/layout.ts[0m:[93m338[0m:[93m24[0m - [91merror[0m[90m ts(2345): [0mArgument of type '{ w: any; left: any; top: any; width: number; height: any; priority: number; }' is not assignable to parameter of type 'never'.
+
+[7m338[0m           entries.push({
+[7m   [0m [91m                       ~[0m
+[7m339[0m             w: w,
+[7m   [0m [91m~~~~~~~~~~~~~~~~~[0m
+[7m...[0m 
+[7m344[0m             priority: 1,
+[7m   [0m [91m~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[7m345[0m           });
+[7m   [0m [91m~~~~~~~~~~~[0m
+[96msrc/scripts/windows/layout.ts[0m:[93m282[0m:[93m24[0m - [91merror[0m[90m ts(2345): [0mArgument of type '{ w: never; left: any; top: any; width: number; height: number; priority: number; }' is not assignable to parameter of type 'never'.
+
+[7m282[0m           entries.push({
+[7m   [0m [91m                       ~[0m
+[7m283[0m             w: w,
+[7m   [0m [91m~~~~~~~~~~~~~~~~~[0m
+[7m...[0m 
+[7m288[0m             priority: idx < 2 ? 1 : 2,
+[7m   [0m [91m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[7m289[0m           });
+[7m   [0m [91m~~~~~~~~~~~[0m
+[96msrc/scripts/windows/layout.ts[0m:[93m274[0m:[93m33[0m - [91merror[0m[90m ts(2345): [0mArgument of type 'any' is not assignable to parameter of type 'never'.
+
+[7m274[0m             orderedWindows.push(w);
+[7m   [0m [91m                                ~[0m
+[96msrc/scripts/windows/layout.ts[0m:[93m273[0m:[93m40[0m - [91merror[0m[90m ts(2345): [0mArgument of type 'any' is not assignable to parameter of type 'never'.
+
+[7m273[0m           if (!orderedWindows.includes(w)) {
+[7m   [0m [91m                                       ~[0m
+[96msrc/scripts/windows/layout.ts[0m:[93m270[0m:[93m42[0m - [91merror[0m[90m ts(2345): [0mArgument of type 'any' is not assignable to parameter of type 'never'.
+
+[7m270[0m         if (contact) orderedWindows.push(contact);
+[7m   [0m [91m                                         ~~~~~~~[0m
+[96msrc/scripts/windows/layout.ts[0m:[93m269[0m:[93m41[0m - [91merror[0m[90m ts(2345): [0mArgument of type 'any' is not assignable to parameter of type 'never'.
+
+[7m269[0m         if (skills) orderedWindows.push(skills);
+[7m   [0m [91m                                        ~~~~~~[0m
+[96msrc/scripts/windows/layout.ts[0m:[93m268[0m:[93m43[0m - [91merror[0m[90m ts(2345): [0mArgument of type 'any' is not assignable to parameter of type 'never'.
+
+[7m268[0m         if (projects) orderedWindows.push(projects);
+[7m   [0m [91m                                          ~~~~~~~~[0m
+[96msrc/scripts/windows/layout.ts[0m:[93m267[0m:[93m42[0m - [91merror[0m[90m ts(2345): [0mArgument of type 'any' is not assignable to parameter of type 'never'.
+
+[7m267[0m         if (aboutMe) orderedWindows.push(aboutMe);
+[7m   [0m [91m                                         ~~~~~~~[0m
+[96msrc/scripts/windows/layout.ts[0m:[93m192[0m:[93m24[0m - [91merror[0m[90m ts(2345): [0mArgument of type '{ w: any; left: any; top: any; width: number; height: number; priority: number; }' is not assignable to parameter of type 'never'.
+
+[7m192[0m           entries.push({
+[7m   [0m [91m                       ~[0m
+[7m193[0m             w: w,
+[7m   [0m [91m~~~~~~~~~~~~~~~~~[0m
+[7m...[0m 
+[7m198[0m             priority: 1,
+[7m   [0m [91m~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[7m199[0m           });
+[7m   [0m [91m~~~~~~~~~~~[0m
+[96msrc/scripts/windows/layout.ts[0m:[93m64[0m:[93m23[0m - [91merror[0m[90m ts(2345): [0mArgument of type '{ w: any; left: number; top: number; width: number; height: number; originalStyle: any; }' is not assignable to parameter of type 'never'.
+
+[7m64[0m       windowData.push({ w, left, top, width, height, originalStyle });
+[7m  [0m [91m                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+[96msrc/scripts/windows/layout.ts[0m:[93m967[0m:[93m27[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'entry' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m967[0m   layout.entries.forEach((entry) => {
+[7m   [0m [93m                          ~~~~~[0m
+[96msrc/scripts/windows/layout.ts[0m:[93m962[0m:[93m34[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'layout' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m962[0m export function applySmartLayout(layout) {
+[7m   [0m [93m                                 ~~~~~~[0m
+[96msrc/scripts/windows/layout.ts[0m:[93m896[0m:[93m40[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'positionData' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m896[0m export function applyCenteredPositions(positionData) {
+[7m   [0m [93m                                       ~~~~~~~~~~~~[0m
+[96msrc/scripts/windows/layout.ts[0m:[93m813[0m:[93m22[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'idx' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m813[0m     meta.forEach((m, idx) => {
+[7m   [0m [93m                     ~~~[0m
+[96msrc/scripts/windows/layout.ts[0m:[93m813[0m:[93m19[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'm' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m813[0m     meta.forEach((m, idx) => {
+[7m   [0m [93m                  ~[0m
+[96msrc/scripts/windows/layout.ts[0m:[93m799[0m:[93m41[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'm' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m799[0m   const totalBaseArea = meta.reduce((s, m) => s + m.baseArea, 0);
+[7m   [0m [93m                                        ~[0m
+[96msrc/scripts/windows/layout.ts[0m:[93m799[0m:[93m38[0m - [93mwarning[0m[90m ts(7044): [0mParameter 's' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m799[0m   const totalBaseArea = meta.reduce((s, m) => s + m.baseArea, 0);
+[7m   [0m [93m                                     ~[0m
+[96msrc/scripts/windows/layout.ts[0m:[93m795[0m:[93m17[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'b' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m795[0m   meta.sort((a, b) => {
+[7m   [0m [93m                ~[0m
+[96msrc/scripts/windows/layout.ts[0m:[93m795[0m:[93m14[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'a' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m795[0m   meta.sort((a, b) => {
+[7m   [0m [93m             ~[0m
+[96msrc/scripts/windows/layout.ts[0m:[93m768[0m:[93m33[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'w' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m768[0m   const meta = visibleWins.map((w) => {
+[7m   [0m [93m                                ~[0m
+[96msrc/scripts/windows/layout.ts[0m:[93m750[0m:[93m29[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'w' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m750[0m   const getPositionOrder = (w) => {
+[7m   [0m [93m                            ~[0m
+[96msrc/scripts/windows/layout.ts[0m:[93m735[0m:[93m30[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'w' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m735[0m   const getWindowPriority = (w) => {
+[7m   [0m [93m                             ~[0m
+[96msrc/scripts/windows/layout.ts[0m:[93m691[0m:[93m6[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'w' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m691[0m     (w) => !w.classList.contains("hidden") && !w.classList.contains("maximized")
+[7m   [0m [93m     ~[0m
+[96msrc/scripts/windows/layout.ts[0m:[93m684[0m:[93m40[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'wins' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m684[0m export function smartDistributeWindows(wins) {
+[7m   [0m [93m                                       ~~~~[0m
+[96msrc/scripts/windows/layout.ts[0m:[93m397[0m:[93m14[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'w' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m397[0m             (w) => w.dataset.app === "experience"
+[7m   [0m [93m             ~[0m
+[96msrc/scripts/windows/layout.ts[0m:[93m394[0m:[93m14[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'w' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m394[0m             (w) => w.dataset.app === "projects"
+[7m   [0m [93m             ~[0m
+[96msrc/scripts/windows/layout.ts[0m:[93m390[0m:[93m14[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'w' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m390[0m             (w) =>
+[7m   [0m [93m             ~[0m
+[96msrc/scripts/windows/layout.ts[0m:[93m385[0m:[93m12[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'w' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m385[0m           (w) => w.dataset.app === "experience"
+[7m   [0m [93m           ~[0m
+[96msrc/scripts/windows/layout.ts[0m:[93m382[0m:[93m12[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'w' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m382[0m           (w) => w.dataset.app === "projects"
+[7m   [0m [93m           ~[0m
+[96msrc/scripts/windows/layout.ts[0m:[93m369[0m:[93m30[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'w' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m369[0m         visibleWins.forEach((w) => {
+[7m   [0m [93m                             ~[0m
+[96msrc/scripts/windows/layout.ts[0m:[93m272[0m:[93m30[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'w' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m272[0m         visibleWins.forEach((w) => {
+[7m   [0m [93m                             ~[0m
+[96msrc/scripts/windows/layout.ts[0m:[93m144[0m:[93m24[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'w' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m144[0m   visibleWins.forEach((w) => {
+[7m   [0m [93m                       ~[0m
+[96msrc/scripts/windows/layout.ts[0m:[93m131[0m:[93m3[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'GAP' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m131[0m   GAP
+[7m   [0m [93m  ~~~[0m
+[96msrc/scripts/windows/layout.ts[0m:[93m130[0m:[93m3[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'MARGIN' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m130[0m   MARGIN,
+[7m   [0m [93m  ~~~~~~[0m
+[96msrc/scripts/windows/layout.ts[0m:[93m129[0m:[93m3[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'menubarHeight' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m129[0m   menubarHeight,
+[7m   [0m [93m  ~~~~~~~~~~~~~[0m
+[96msrc/scripts/windows/layout.ts[0m:[93m128[0m:[93m3[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'availableHeight' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m128[0m   availableHeight,
+[7m   [0m [93m  ~~~~~~~~~~~~~~~[0m
+[96msrc/scripts/windows/layout.ts[0m:[93m127[0m:[93m3[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'availableWidth' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m127[0m   availableWidth,
+[7m   [0m [93m  ~~~~~~~~~~~~~~[0m
+[96msrc/scripts/windows/layout.ts[0m:[93m126[0m:[93m3[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'visibleWins' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m126[0m   visibleWins,
+[7m   [0m [93m  ~~~~~~~~~~~[0m
+[96msrc/scripts/windows/layout.ts[0m:[93m5[0m:[93m9[0m - [93mwarning[0m[90m ts(6133): [0m'_tablet' is declared but its value is never read.
+
+[7m5[0m   const _tablet = isTablet();
+[7m [0m [93m        ~~~~~~~[0m
+[96msrc/scripts/windows/layout.ts[0m:[93m3[0m:[93m44[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'wins' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m3[0m export function calculateCenteredPositions(wins) {
+[7m [0m [93m                                           ~~~~[0m
+
+[96msrc/scripts/windows/persistence.ts[0m:[93m108[0m:[93m19[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'w' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m108[0m     wins.forEach((w) => {
+[7m   [0m [93m                  ~[0m
+[96msrc/scripts/windows/persistence.ts[0m:[93m95[0m:[93m27[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'wins' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m95[0m export function saveState(wins) {
+[7m  [0m [93m                          ~~~~[0m
+[96msrc/scripts/windows/persistence.ts[0m:[93m13[0m:[93m19[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'w' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m13[0m     wins.forEach((w) => {
+[7m  [0m [93m                  ~[0m
+[96msrc/scripts/windows/persistence.ts[0m:[93m5[0m:[93m27[0m - [93mwarning[0m[90m ts(7044): [0mParameter 'wins' implicitly has an 'any' type, but a better type may be inferred from usage.
+
+[7m5[0m export function loadState(wins) {
+[7m [0m [93m                          ~~~~[0m
+
+Result (26 files): 
+- 43 errors
+- 0 warnings
+- 43 hints
+

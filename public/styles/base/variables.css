@@ -16,8 +16,8 @@
   --menubar-height: 28px;
   --dock-height: 84px;
 
-  --font-stack: -apple-system, BlinkMacSystemFont, "SF Pro Text",
-    "Helvetica Neue", system-ui, sans-serif;
+  --font-stack:
+    -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", system-ui, sans-serif;
 
   --noise-opacity: 0.08;
 

@@ -1,24 +1,23 @@
 (function initMenuBar() {
   const bar = document.getElementById("menubar");
   if (!bar) return;
-  const items = Array.from(bar.querySelectorAll(".menu-item[data-app]"));
-  const leftMenu = bar.querySelector(".left");
+  const items = Array.from(bar.querySelectorAll<HTMLElement>(".menu-item[data-app]"));
+  const leftMenu = bar.querySelector<HTMLElement>(".left");
   const resetBtn = document.getElementById("reset-windows-btn");
 
-  const initialWindowStyles = new Map();
-  const initialVisibility = new Map();
+  const initialWindowStyles = new Map<string, string>();
+  const initialVisibility = new Map<string, boolean>();
   let viewportChanged = false;
 
   function storeInitialStyles() {
-    const wins = document.querySelectorAll(".window");
+    const wins = document.querySelectorAll<HTMLElement>(".window");
     wins.forEach((win) => {
-      const _appId = win.dataset.app;
-      if (!initialWindowStyles.has(_appId)) {
-        const initialStyle = win.getAttribute("style") || "";
-        const isVisible = !win.classList.contains("hidden");
-        initialWindowStyles.set(_appId, initialStyle);
-        initialVisibility.set(_appId, isVisible);
-      }
+      const appId = win.dataset.app;
+      if (!appId || initialWindowStyles.has(appId)) return;
+      const initialStyle = win.getAttribute("style") || "";
+      const isVisible = !win.classList.contains("hidden");
+      initialWindowStyles.set(appId, initialStyle);
+      initialVisibility.set(appId, isVisible);
     });
   }
 
@@ -30,7 +29,7 @@
     }
   });
 
-  function normalizeStyle(style) {
+  function normalizeStyle(style: string | null | undefined) {
     if (!style) return "";
     return style
       .replace(/z-index:\s*\d+;?/g, "")
@@ -41,15 +40,16 @@
   }
 
   function checkWindowsModified() {
-    if (!resetBtn) return false;
+    if (!resetBtn) return;
 
-    const wins = document.querySelectorAll(".window");
+    const wins = document.querySelectorAll<HTMLElement>(".window");
     let isModified = false;
     let allWindowsHaveOriginalStyle = true;
     let visibilityChanged = false;
 
     for (const win of wins) {
-      const _appId = win.dataset.app;
+      const appId = win.dataset.app;
+      if (!appId) continue;
       const currentStyle = win.getAttribute("style") || "";
       const originalStyle = win.getAttribute("data-original-style") || "";
 
@@ -70,13 +70,11 @@
     if (initialVisibility.size > 0) {
       for (const win of wins) {
         const appId = win.dataset.app;
+        if (!appId) continue;
         const currentlyVisible = !win.classList.contains("hidden");
         const initiallyVisible = initialVisibility.get(appId);
 
-        if (
-          initiallyVisible !== undefined &&
-          currentlyVisible !== initiallyVisible
-        ) {
+        if (initiallyVisible !== undefined && currentlyVisible !== initiallyVisible) {
           visibilityChanged = true;
           break;
         }
@@ -106,7 +104,8 @@
     }
 
     wins.forEach((win) => {
-      const appId = win.dataset.app;
+      const appId = (win as HTMLElement).dataset.app;
+      if (!appId) return;
       const originalHtmlStyle = initialWindowStyles.get(appId);
 
       if (originalHtmlStyle) {
@@ -139,10 +138,11 @@
       initialVisibility.clear();
       storeInitialStyles();
 
-      const windowsToSave = Array.from(document.querySelectorAll(".window"));
+      const windowsToSave = Array.from(document.querySelectorAll(".window")) as HTMLElement[];
       const data = {};
       windowsToSave.forEach((w) => {
         const appId = w.dataset.app;
+        if (!appId) return;
         data[appId] = {
           left: parseInt(w.style.left) || 0,
           top: parseInt(w.style.top) || 0,
@@ -181,10 +181,7 @@
     });
 
     resetBtn.addEventListener("keydown", (e) => {
-      if (
-        (e.key === "Enter" || e.key === " ") &&
-        !resetBtn.classList.contains("faded")
-      ) {
+      if ((e.key === "Enter" || e.key === " ") && !resetBtn.classList.contains("faded")) {
         e.preventDefault();
         resetWindows();
       }
@@ -208,49 +205,53 @@
   document.addEventListener("windows:statechange", checkWindowsModified);
 
   function initMobileMenu() {
-    if (window.innerWidth <= 767) {
-      bar.addEventListener("click", (e) => {
-        const rect = bar.getBoundingClientRect();
-        if (e.clientX - rect.left < 60 && e.clientY - rect.top < rect.height) {
-          if (leftMenu) {
-            leftMenu.classList.toggle("menu-open");
-          }
+    if (!bar || window.innerWidth > 767) return;
+
+    bar.addEventListener("click", (e) => {
+      if (!bar) return;
+      const rect = bar.getBoundingClientRect();
+      if (e.clientX - rect.left < 60 && e.clientY - rect.top < rect.height) {
+        if (leftMenu) {
+          leftMenu.classList.toggle("menu-open");
         }
-      });
+      }
+    });
 
-      items.forEach((item) => {
-        item.addEventListener("click", () => {
-          if (leftMenu) {
-            leftMenu.classList.remove("menu-open");
-          }
-        });
-      });
-
-      document.addEventListener("click", (e) => {
-        if (
-          leftMenu &&
-          leftMenu.classList.contains("menu-open") &&
-          !bar.contains(e.target)
-        ) {
+    items.forEach((item) => {
+      item.addEventListener("click", () => {
+        if (leftMenu) {
           leftMenu.classList.remove("menu-open");
         }
       });
-    }
+    });
+
+    document.addEventListener("click", (e) => {
+      const target = e.target as Node | null;
+      if (
+        leftMenu &&
+        leftMenu.classList.contains("menu-open") &&
+        bar &&
+        target &&
+        !bar.contains(target)
+      ) {
+        leftMenu.classList.remove("menu-open");
+      }
+    });
   }
 
-  function getWindow(app) {
-    return document.querySelector(`.window[data-app="${app}"]`);
+  function getWindow(app: string | undefined) {
+    return document.querySelector(`.window[data-app="${app}"]`) as HTMLElement | null;
   }
-  function focusWindow(win) {
+  function focusWindow(win: HTMLElement | null) {
     if (!win) return;
     win.dispatchEvent(new Event("click", { bubbles: true }));
   }
-  function maximizeWindow(win) {
+  function maximizeWindow(win: HTMLElement | null) {
     if (!win) return;
-    const btn = win.querySelector(".window-button.maximize");
+    const btn = win.querySelector(".window-button.maximize") as HTMLElement | null;
     if (btn) btn.click();
   }
-  function restoreIfHidden(win) {
+  function restoreIfHidden(win: HTMLElement) {
     if (win.classList.contains("hidden")) {
       win.classList.remove("hidden");
     }
@@ -291,7 +292,7 @@
           focusWindow(win);
         }
         if (window.__ensureWindowsRespectMenubar) {
-          setTimeout(() => window.__ensureWindowsRespectMenubar(), 0);
+          setTimeout(() => window.__ensureWindowsRespectMenubar?.(), 0);
         }
         if (wasHidden) {
           document.dispatchEvent(new CustomEvent("windows:recenter"));
@@ -300,14 +301,15 @@
     });
 
     item.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") {
+      const keyEvent = e as KeyboardEvent;
+      if (keyEvent.key === "Enter" || keyEvent.key === " ") {
         e.preventDefault();
         item.click();
       }
-      if (e.key === "ArrowDown") {
+      if (keyEvent.key === "ArrowDown") {
         const win = getWindow(item.dataset.app);
         if (win) {
-          const content = win.querySelector(".window-content");
+          const content = win.querySelector<HTMLElement>(".window-content");
           content?.focus?.();
         }
       }
@@ -326,7 +328,7 @@
     }, 100);
   }
 
-  let resizeTimer;
+  let resizeTimer: ReturnType<typeof setTimeout>;
   window.addEventListener("resize", () => {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(() => {

@@ -2,6 +2,7 @@ export function initClock() {
   const clockEl = document.getElementById("clock");
   if (!clockEl) return;
   function tick() {
+    if (!clockEl) return;
     const now = new Date();
     const timeString = now.toLocaleTimeString([], {
       hour: "2-digit",

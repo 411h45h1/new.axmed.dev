@@ -79,7 +79,9 @@
   height: 20px;
   cursor: pointer;
   border-radius: 4px;
-  transition: background var(--transition-fast), opacity var(--transition-fast);
+  transition:
+    background var(--transition-fast),
+    opacity var(--transition-fast);
   opacity: 1;
 }
 

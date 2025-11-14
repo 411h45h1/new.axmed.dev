@@ -1,7 +1,41 @@
 import eslintPluginAstro from "eslint-plugin-astro";
+import tseslint from "typescript-eslint";
 
 export default [
-  // Astro files - use default recommended config
+  // TypeScript files - must come before Astro to avoid conflicts
+  ...tseslint.configs.recommended.map((config) => ({
+    ...config,
+    files: ["**/*.ts"],
+  })),
+  {
+    files: ["**/*.ts"],
+    languageOptions: {
+      parser: tseslint.parser,
+      parserOptions: {
+        project: false,
+      },
+    },
+    rules: {
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        {
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          caughtErrors: "none",
+        },
+      ],
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/explicit-function-return-type": "off",
+      "@typescript-eslint/explicit-module-boundary-types": "off",
+      "@typescript-eslint/no-non-null-assertion": "warn",
+      "no-console": ["warn", { allow: ["warn", "error"] }],
+      "prefer-const": "warn",
+      "no-var": "error",
+      eqeqeq: ["warn", "always", { null: "ignore" }],
+    },
+  },
+
+  // Astro files
   ...eslintPluginAstro.configs.recommended,
 
   // JavaScript files
@@ -62,12 +96,6 @@ export default [
 
   // Ignore patterns
   {
-    ignores: [
-      "dist/**",
-      ".astro/**",
-      "node_modules/**",
-      "*.config.mjs",
-      "*.config.js",
-    ],
+    ignores: ["dist/**", ".astro/**", "node_modules/**", "*.config.mjs", "*.config.js"],
   },
 ];

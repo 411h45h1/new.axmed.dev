@@ -262,12 +262,7 @@
 </style>
 
 <div class="contact-container">
-  <form
-    name="contact"
-    data-netlify="true"
-    data-netlify-honeypot="bot-field"
-    hidden
-  >
+  <form name="contact" data-netlify="true" data-netlify-honeypot="bot-field" hidden>
     <input type="text" name="name" />
     <input type="email" name="email" />
     <input type="text" name="subject" />
@@ -276,10 +271,7 @@
 
   <section class="contact-section">
     <h3>Get in Touch 📬</h3>
-    <p>
-      Open to discussing new projects, creative ideas, or opportunities to
-      collaborate.
-    </p>
+    <p>Open to discussing new projects, creative ideas, or opportunities to collaborate.</p>
 
     <ul class="contact-info">
       <li>
@@ -398,9 +390,7 @@
       <div class="form-status" id="form-status"></div>
     </form>
 
-    <p class="footer-note">
-      Available for freelance projects and full-time opportunities
-    </p>
+    <p class="footer-note">Available for freelance projects and full-time opportunities</p>
   </section>
 </div>
 
@@ -452,14 +442,11 @@
           localStorage.setItem(RATE_LIMIT_KEY, Date.now().toString());
 
           statusDiv.className = "form-status success";
-          statusDiv.textContent =
-            "✓ Message sent successfully! I'll get back to you soon.";
+          statusDiv.textContent = "✓ Message sent successfully! I'll get back to you soon.";
           form.reset();
 
           setTimeout(() => {
-            const successWindow = document.querySelector(
-              '.window[data-app="success"]'
-            );
+            const successWindow = document.querySelector('.window[data-app="success"]');
             if (successWindow) {
               const viewportWidth = window.innerWidth;
               const viewportHeight = window.innerHeight;

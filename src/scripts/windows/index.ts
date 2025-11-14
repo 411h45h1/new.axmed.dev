@@ -6,12 +6,7 @@ import {
   applyCenteredPositions,
   applySmartLayout,
 } from "./layout.js";
-import {
-  loadState,
-  saveState,
-  readState,
-  hasViewportMismatch,
-} from "./persistence.js";
+import { loadState, saveState, readState, hasViewportMismatch } from "./persistence.js";
 
 const STATE_EVENT = "windows:statechange";
 
@@ -27,7 +22,7 @@ export function initWindows() {
   }
   if (typeof window !== "undefined") window.__WINDOWS_INITED__ = true;
 
-  const wins = Array.from(document.querySelectorAll(".window"));
+  const wins = Array.from(document.querySelectorAll<HTMLElement>(".window"));
   wins.forEach((w) => w.classList.add("pre-center"));
 
   if (!isMobile()) {
@@ -38,14 +33,14 @@ export function initWindows() {
   let zCounter = 100;
 
   wins.forEach((w, index) => {
-    w.style.zIndex = zCounter + index;
+    w.style.zIndex = String(zCounter + index);
   });
   zCounter += wins.length;
 
-  function focus(win) {
+  function focus(win: HTMLElement) {
     wins.forEach((w) => w.classList.remove("focused"));
     win.classList.add("focused");
-    win.style.zIndex = ++zCounter;
+    win.style.zIndex = String(++zCounter);
   }
 
   if (isMobile()) {
@@ -53,9 +48,7 @@ export function initWindows() {
       w.classList.add("hidden");
     });
   } else {
-    const firstVisibleWindow = wins.find(
-      (w) => !w.classList.contains("hidden")
-    );
+    const firstVisibleWindow = wins.find((w) => !w.classList.contains("hidden"));
     if (firstVisibleWindow) {
       focus(firstVisibleWindow);
     }
@@ -63,11 +56,8 @@ export function initWindows() {
 
   function ensureWindowsRespectMenubar() {
     const menubarHeight =
-      parseInt(
-        getComputedStyle(document.documentElement).getPropertyValue(
-          "--menubar-height"
-        )
-      ) || 28;
+      parseInt(getComputedStyle(document.documentElement).getPropertyValue("--menubar-height")) ||
+      28;
 
     wins.forEach((w) => {
       if (!w.classList.contains("hidden") && !isMobile()) {
@@ -79,7 +69,7 @@ export function initWindows() {
     });
   }
 
-  function toggleMaximize(win) {
+  function toggleMaximize(win: HTMLElement) {
     const goingMax = !win.classList.contains("maximized");
     if (goingMax) {
       win.dataset.prevInline = win.getAttribute("style") || "";
@@ -136,19 +126,13 @@ export function initWindows() {
       wins.forEach((w) => w.classList.remove("pre-center"));
       saveState(wins);
     } else {
-      let defaultWindows;
+      let defaultWindows: string[];
       const viewportWidth = window.innerWidth;
 
       if (isTablet()) {
         defaultWindows = ["about", "projects", "experience"];
       } else if (viewportWidth >= 1440) {
-        defaultWindows = [
-          "about",
-          "projects",
-          "experience",
-          "skills",
-          "contact",
-        ];
+        defaultWindows = ["about", "projects", "experience", "skills", "contact"];
       } else {
         defaultWindows = ["about", "projects", "skills", "contact"];
       }
@@ -162,7 +146,7 @@ export function initWindows() {
 
       wins.forEach((w) => {
         const appId = w.dataset.app;
-        if (defaultWindows.includes(appId)) {
+        if (appId && defaultWindows.includes(appId)) {
           w.classList.remove("hidden");
         } else {
           w.classList.add("hidden");
@@ -225,7 +209,7 @@ export function initWindows() {
         wins.forEach((w) => w.classList.remove("pre-center"));
         saveState(wins);
       } else {
-        let defaultWindows;
+        let defaultWindows: string[];
         const viewportWidth = window.innerWidth;
 
         if (isTablet()) {
@@ -239,7 +223,7 @@ export function initWindows() {
         wins.forEach((w) => {
           const appId = w.dataset.app;
           w.classList.remove("maximized");
-          if (defaultWindows.includes(appId)) {
+          if (appId && defaultWindows.includes(appId)) {
             w.classList.remove("hidden");
           } else {
             w.classList.add("hidden");
@@ -303,8 +287,7 @@ export function initWindows() {
         if (visibleWindow) {
           const menubar = document.getElementById("menubar");
           if (menubar) {
-            const title =
-              visibleWindow.querySelector(".title")?.textContent || "";
+            const title = visibleWindow.querySelector(".title")?.textContent || "";
             menubar.setAttribute("data-screen-title", title);
           }
         } else {
@@ -314,8 +297,7 @@ export function initWindows() {
             focus(aboutWindow);
             const menubar = document.getElementById("menubar");
             if (menubar) {
-              const title =
-                aboutWindow.querySelector(".title")?.textContent || "";
+              const title = aboutWindow.querySelector(".title")?.textContent || "";
               menubar.setAttribute("data-screen-title", title);
             }
             saveState(wins);
@@ -365,7 +347,9 @@ export function initWindows() {
       applyCenteredPositions(newPositions);
       newPositions.windowData.forEach(({ w }) => {
         const currentStyle = w.getAttribute("style");
-        w.setAttribute("data-original-style", currentStyle);
+        if (currentStyle) {
+          w.setAttribute("data-original-style", currentStyle);
+        }
       });
       setTimeout(() => {
         document.dispatchEvent(new CustomEvent("windows:statechange"));
@@ -377,22 +361,14 @@ export function initWindows() {
     }
   });
 
-  let resizeTimer;
-  let previousDeviceType = isMobile()
-    ? "mobile"
-    : isTablet()
-    ? "tablet"
-    : "desktop";
+  let resizeTimer: ReturnType<typeof setTimeout> | undefined;
+  let previousDeviceType = isMobile() ? "mobile" : isTablet() ? "tablet" : "desktop";
 
   window.addEventListener("resize", () => {
     clearTimeout(resizeTimer);
 
     resizeTimer = setTimeout(() => {
-      const currentDeviceType = isMobile()
-        ? "mobile"
-        : isTablet()
-        ? "tablet"
-        : "desktop";
+      const currentDeviceType = isMobile() ? "mobile" : isTablet() ? "tablet" : "desktop";
       const deviceTypeChanged = currentDeviceType !== previousDeviceType;
       const viewportChanged = hasViewportChanged();
 
@@ -435,12 +411,16 @@ export function initWindows() {
       return;
     }
 
+    if (!titlebar) return;
+
     titlebar.addEventListener("mousedown", (e) => {
-      if (e.target.closest(".window-button")) return;
+      const mouseEvent = e as MouseEvent;
+      const target = mouseEvent.target as HTMLElement | null;
+      if (target?.closest(".window-button")) return;
       if (win.classList.contains("maximized")) return;
       dragging = true;
-      startX = e.clientX;
-      startY = e.clientY;
+      startX = mouseEvent.clientX;
+      startY = mouseEvent.clientY;
       const rect = win.getBoundingClientRect();
       origX = rect.left;
       origY = rect.top;
@@ -456,11 +436,8 @@ export function initWindows() {
         ny = origY + dy;
       const margin = 40;
       const menubarHeight =
-        parseInt(
-          getComputedStyle(document.documentElement).getPropertyValue(
-            "--menubar-height"
-          )
-        ) || 28;
+        parseInt(getComputedStyle(document.documentElement).getPropertyValue("--menubar-height")) ||
+        28;
 
       nx = Math.min(
         window.innerWidth - margin,
@@ -488,7 +465,7 @@ export function initWindows() {
     );
 
     let resizing = false;
-    let resizeMode = null;
+    let resizeMode: string | null = null;
     let startX = 0,
       startY = 0,
       startW = 0,
@@ -497,12 +474,13 @@ export function initWindows() {
       startTop = 0;
 
     resizeElements.forEach((resizer) => {
-      resizer.addEventListener("mousedown", (e) => {
+      resizer.addEventListener("mousedown", (e: Event) => {
+        const mouseEvent = e as MouseEvent;
         if (win.classList.contains("maximized")) return;
         resizing = true;
-        resizeMode = resizer.dataset.resize || "bottom-right";
-        startX = e.clientX;
-        startY = e.clientY;
+        resizeMode = (resizer as HTMLElement).dataset.resize || "bottom-right";
+        startX = mouseEvent.clientX;
+        startY = mouseEvent.clientY;
         const r = win.getBoundingClientRect();
         startW = r.width;
         startH = r.height;
@@ -516,22 +494,16 @@ export function initWindows() {
     });
 
     window.addEventListener("mousemove", (e) => {
-      if (!resizing) return;
+      if (!resizing || !resizeMode) return;
       const dx = e.clientX - startX;
       const dy = e.clientY - startY;
 
       const menubarHeight =
-        parseInt(
-          getComputedStyle(document.documentElement).getPropertyValue(
-            "--menubar-height"
-          )
-        ) || 28;
+        parseInt(getComputedStyle(document.documentElement).getPropertyValue("--menubar-height")) ||
+        28;
       const dockHeight =
-        parseInt(
-          getComputedStyle(document.documentElement).getPropertyValue(
-            "--dock-height"
-          )
-        ) || 84;
+        parseInt(getComputedStyle(document.documentElement).getPropertyValue("--dock-height")) ||
+        84;
 
       let newWidth = startW;
       let newHeight = startH;
@@ -619,8 +591,9 @@ export function initWindows() {
 
   document.querySelectorAll(".window-button").forEach((btn) => {
     btn.addEventListener("click", (e) => {
-      const win = btn.closest(".window");
-      const action = btn.dataset.action;
+      const win = btn.closest<HTMLElement>(".window");
+      if (!win) return;
+      const action = (btn as HTMLElement).dataset.action;
       switch (action) {
         case "close":
           win.classList.add("hidden");
@@ -646,17 +619,18 @@ export function initWindows() {
   });
 
   document.addEventListener("click", (e) => {
-    const w = e.target.closest(".window");
+    const target = e.target as HTMLElement | null;
+    const w = target?.closest(".window") as HTMLElement | null;
     if (w) focus(w);
   });
   window.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
-      const focused = document.querySelector(".window.focused.maximized");
+      const focused = document.querySelector<HTMLElement>(".window.focused.maximized");
       if (focused) toggleMaximize(focused);
     }
   });
 
-  function playMinimize(win, done) {
+  function playMinimize(win: HTMLElement, done: () => void) {
     const app = win.dataset.app;
     const dockItem = document.querySelector(`.dock-item[data-app="${app}"]`);
     if (!dockItem) {
@@ -673,8 +647,7 @@ export function initWindows() {
     const toX = dRect.left + dRect.width / 2 - (wRect.left + wRect.width / 2);
     const toY = dRect.top + dRect.height / 2 - (wRect.top + wRect.height / 2);
     win.style.transformOrigin = "center center";
-    win.style.transition =
-      "transform 360ms cubic-bezier(.4,.8,.2,1), opacity 360ms";
+    win.style.transition = "transform 360ms cubic-bezier(.4,.8,.2,1), opacity 360ms";
     requestAnimationFrame(() => {
       win.style.transform = `translate(${toX}px, ${toY}px) scale(.25)`;
       win.style.opacity = "0";
@@ -690,11 +663,9 @@ export function initWindows() {
     win.addEventListener("transitionend", clear);
   }
 
-  ["mouseup", "mouseleave"].forEach((ev) =>
-    window.addEventListener(ev, () => saveState(wins))
-  );
+  ["mouseup", "mouseleave"].forEach((ev) => window.addEventListener(ev, () => saveState(wins)));
 
-  window.saveState = (windows) => saveState(windows || wins);
+  window.saveState = (windows) => saveState((windows as HTMLElement[]) || wins);
 
   return { focus, toggleMaximize, emitState };
 }

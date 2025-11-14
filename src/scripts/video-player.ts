@@ -1,62 +1,63 @@
 // Video Player functionality
 export function initVideoPlayer() {
   // Handle demo video links
-  document.addEventListener('click', (e) => {
-    if (e.target.classList.contains('demo-video-link')) {
-      e.preventDefault();
+  document.addEventListener("click", (e) => {
+    const target = e.target as HTMLElement | null;
+    if (!target || !target.classList?.contains("demo-video-link")) return;
 
-      const videoPath = e.target.dataset.video;
-      if (!videoPath) return;
+    e.preventDefault();
 
-      // Open video player window
-      const videoWindow = document.querySelector(
-        '.window[data-app="video-player"]'
+    const videoPath = (target as HTMLElement & { dataset: DOMStringMap }).dataset.video;
+    if (!videoPath) return;
+
+    // Open video player window
+    const videoWindow = document.querySelector(
+      '.window[data-app="video-player"]'
+    ) as HTMLElement | null;
+    if (!videoWindow) return;
+
+    // Update video source
+    const video = videoWindow.querySelector("#demo-video") as HTMLVideoElement | null;
+    if (video) {
+      video.src = videoPath;
+      video.load(); // Reload the video element
+
+      // Trigger resize when metadata loads
+      video.addEventListener(
+        "loadedmetadata",
+        () => {
+          // Small delay to ensure window is visible before resizing
+          setTimeout(() => {
+            resizeVideoWindowToContent(video, videoWindow);
+          }, 100);
+        },
+        { once: true }
       );
-      if (!videoWindow) return;
-
-      // Update video source
-      const video = videoWindow.querySelector('#demo-video');
-      if (video) {
-        video.src = videoPath;
-        video.load(); // Reload the video element
-
-        // Trigger resize when metadata loads
-        video.addEventListener(
-          'loadedmetadata',
-          () => {
-            // Small delay to ensure window is visible before resizing
-            setTimeout(() => {
-              resizeVideoWindowToContent(video, videoWindow);
-            }, 100);
-          },
-          { once: true }
-        );
-      }
-
-      // Show and focus the video player window
-      videoWindow.classList.remove('hidden', 'minimized');
-
-      // Focus the window (trigger click event to use existing focus logic)
-      if (videoWindow.dispatchEvent) {
-        videoWindow.dispatchEvent(new Event('click', { bubbles: true }));
-      }
-
-      // Update dock indicators - show and activate the video player icon
-      const dockItem = document.querySelector(
-        '.dock-item[data-app="video-player"]'
-      );
-      if (dockItem) {
-        dockItem.style.display = 'flex';
-        dockItem.classList.add('active');
-      }
-
-      // Trigger state change event
-      document.dispatchEvent(new CustomEvent('windows:statechange'));
     }
+
+    // Show and focus the video player window
+    videoWindow.classList.remove("hidden", "minimized");
+
+    // Focus the window (trigger click event to use existing focus logic)
+    if (videoWindow.dispatchEvent) {
+      videoWindow.dispatchEvent(new Event("click", { bubbles: true }));
+    }
+
+    // Update dock indicators - show and activate the video player icon
+    const dockItem = document.querySelector(
+      '.dock-item[data-app="video-player"]'
+    ) as HTMLElement | null;
+    if (dockItem) {
+      dockItem.style.display = "flex";
+      dockItem.classList.add("active");
+    }
+
+    // Trigger state change event
+    document.dispatchEvent(new CustomEvent("windows:statechange"));
   });
 }
 
-function resizeVideoWindowToContent(video, videoWindow) {
+function resizeVideoWindowToContent(video: HTMLVideoElement, videoWindow: HTMLElement) {
   if (!video || !videoWindow) return;
 
   // Skip auto-resize on mobile - let responsive CSS handle it
@@ -111,7 +112,7 @@ function resizeVideoWindowToContent(video, videoWindow) {
 
   // Trigger window system update
   if (window.saveState) {
-    const allWindows = Array.from(document.querySelectorAll('.window'));
+    const allWindows = Array.from(document.querySelectorAll(".window"));
     window.saveState(allWindows);
   }
 }

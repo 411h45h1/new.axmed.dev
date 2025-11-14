@@ -2,37 +2,30 @@
 // Video Player Window Content
 ---
 
-<div class='video-container'>
-  <video
-    id='demo-video'
-    controls
-    preload='metadata'
-    aria-label='PowerLv demo video'
-  >
-    <source src='/videos/plv_screencap_0.7.3.mp4' type='video/mp4' />
+<div class="video-container">
+  <video id="demo-video" controls preload="metadata" aria-label="PowerLv demo video">
+    <source src="/videos/plv_screencap_0.7.3.mp4" type="video/mp4" />
     Your browser does not support the video tag.
   </video>
 </div>
 
-<div class='video-info'>
-  <h4 id='video-title'>PowerLv Demo</h4>
-  <p id='video-description'>
-    Watch PowerLv in action - a social fitness app with real-time feeds and
-    competitive leaderboards.
+<div class="video-info">
+  <h4 id="video-title">PowerLv Demo</h4>
+  <p id="video-description">
+    Watch PowerLv in action - a social fitness app with real-time feeds and competitive
+    leaderboards.
   </p>
 </div>
 
 <script>
   // Auto-resize video player window based on video dimensions
   function resizeVideoPlayerWindow() {
-    const video = document.getElementById('demo-video') as HTMLVideoElement;
-    const videoWindow = document.querySelector(
-      '.window[data-app="video-player"]'
-    ) as HTMLElement;
+    const video = document.getElementById("demo-video") as HTMLVideoElement;
+    const videoWindow = document.querySelector('.window[data-app="video-player"]') as HTMLElement;
 
     if (!video || !videoWindow) return;
 
-    video.addEventListener('loadedmetadata', () => {
+    video.addEventListener("loadedmetadata", () => {
       const videoWidth = video.videoWidth;
       const videoHeight = video.videoHeight;
 
@@ -70,16 +63,14 @@
       // Account for window chrome (titlebar ~28px, video-info ~60px)
       const chromeHeight = 88;
       const windowWidth = Math.round(Math.max(scaledWidth, 450));
-      const windowHeight = Math.round(
-        Math.max(scaledHeight + chromeHeight, 300)
-      );
+      const windowHeight = Math.round(Math.max(scaledHeight + chromeHeight, 300));
 
       // Update window size
       videoWindow.style.width = `${windowWidth}px`;
       videoWindow.style.height = `${windowHeight}px`;
 
       // Center window if it's newly opened
-      if (videoWindow.classList.contains('hidden') === false) {
+      if (videoWindow.classList.contains("hidden") === false) {
         const centerX = (window.innerWidth - windowWidth) / 2;
         const centerY = (window.innerHeight - windowHeight) / 2;
 
@@ -89,15 +80,15 @@
 
       // Trigger window system update
       if ((window as any).saveState) {
-        const allWindows = Array.from(document.querySelectorAll('.window'));
+        const allWindows = Array.from(document.querySelectorAll(".window"));
         (window as any).saveState(allWindows);
       }
     });
   }
 
   // Initialize on DOM ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', resizeVideoPlayerWindow);
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", resizeVideoPlayerWindow);
   } else {
     resizeVideoPlayerWindow();
   }
@@ -147,7 +138,7 @@
   }
 
   /* Ensure window content uses flexbox properly */
-  :global(.window[data-app='video-player'] .window-content) {
+  :global(.window[data-app="video-player"] .window-content) {
     display: flex;
     flex-direction: column;
     height: 100%;

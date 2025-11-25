@@ -4,8 +4,8 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "astro dev",
-    "clean:dev": "bun clean:install && astro dev",
-    "clean:install": "bun clean && bun i",
+    "reinstall:dev": "bun reinstall && astro dev",
+    "reinstall": "bun clean && bun i",
     "clean": "rm -rf dist .astro node_modules package-lock.json bun.lock",
     "start": "astro dev",
     "build": "astro build",
@@ -25,18 +25,18 @@
     "test:report": "playwright show-report"
   },
   "dependencies": {
-    "astro": "5.15.6"
+    "astro": "5.16.0"
   },
   "devDependencies": {
     "@astrojs/check": "0.9.5",
-    "@playwright/test": "^1.56.1",
-    "@typescript-eslint/eslint-plugin": "^8.46.4",
-    "@typescript-eslint/parser": "^8.46.4",
+    "@playwright/test": "^1.57.0",
+    "@typescript-eslint/eslint-plugin": "^8.48.0",
+    "@typescript-eslint/parser": "^8.48.0",
     "eslint": "^9.39.1",
     "eslint-plugin-astro": "^1.5.0",
     "prettier": "^3.6.2",
     "prettier-plugin-astro": "^0.14.1",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.46.4"
+    "typescript-eslint": "^8.48.0"
   }
 }

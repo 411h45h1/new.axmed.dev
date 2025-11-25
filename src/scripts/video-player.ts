@@ -5,7 +5,17 @@ export function initVideoPlayer() {
     const target = e.target as HTMLElement | null;
     if (!target || !target.classList?.contains("demo-video-link")) return;
 
-    e.preventDefault();
+    // Only handle left-click (button 0). Allow middle-click and right-click to pass through
+    const mouseEvent = e as MouseEvent;
+    if (mouseEvent.button !== 0) return;
+
+    // Only prevent default for regular left-clicks
+    if (!mouseEvent.ctrlKey && !mouseEvent.metaKey && !mouseEvent.shiftKey) {
+      e.preventDefault();
+    } else {
+      // For modifier key combinations (open in new tab/window), let browser handle it
+      return;
+    }
 
     const videoPath = (target as HTMLElement & { dataset: DOMStringMap }).dataset.video;
     if (!videoPath) return;
